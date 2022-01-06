@@ -1,0 +1,118 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+resources:
+  containers:
+  - container: LinuxContainer
+    image: mcr.microsoft.com/dotnet-buildtools-prereqs:ubuntu-16.04-cross-cfdd435-20190312152303
+
+parameters:
+  - name: 'Deploy_Dev_Stage'
+    displayName: Deploy to DEV environment
+    type: boolean
+    default: 'true'
+  - name: 'Deploy_Prepare_Stage'
+    displayName: Deploy Prepare
+    type: boolean
+    default: 'false'
+  - name: 'Deploy_Release_Stage'
+    displayName: Deploy Release
+    type: boolean
+    default: 'false'
+
+variables:
+  # Cannot use key:value syntax in root defined variables
+  - name: _TeamName
+    value: 'arcade-light'
+  - name: _PublishUsingPipelines
+    value: true
+  - name: ProductVersion
+    value: 'Alpha-1'
+  - name: SQKey
+    value: 'arcade-light'
+  - name: SolutionPath
+    value: 'arcade-light.sln'
+  - name: SQName
+    value: 'arcade-light.DemoPipeline'
+  - name: Deploy_Dev
+    value: and(succeeded(), eq(in(variables['Build.Reason'], 'PullRequest', 'IndividualCI'), false), eq('${{ parameters.Deploy_Dev_Stage }}', true))
+  - name: Deploy_Prepare
+    value: and(succeeded(), eq(in(variables['Build.Reason'], 'PullRequest', 'IndividualCI'), false), eq('${{ parameters.Deploy_Prepare_Stage }}', true))
+  - name: Deploy_Release
+    value: and(succeeded(), eq(in(variables['Build.Reason'], 'PullRequest', 'IndividualCI'), false), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
+  - name: Build.Repository.Clean
+    value: true
+
+trigger:
+- main
+
+stages:
+- stage: build_test_package
+  jobs:
+  # Windows legs
+  - template: /eng/pipelines/windows.yml
+    parameters:
+      isOfficialBuild: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+      fullMatrix: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+  # Linux legs
+  #- template: /eng/pipelines/linux.yml
+  #  parameters:
+  #    isOfficialBuild: ${{ and(ne(variables['System.TeamProject'], 'public'), notIn(variables['Build.Reason'], 'PullRequest')) }}
+  #    fullMatrix: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+
+- stage: acc1
+  displayName: 'Acceptance Test 1'
+  dependsOn: build_test_package
+  jobs:
+  - template: /eng/pipelines/stage_acc1.yml
+    parameters:
+      isOfficialBuild: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+      testScope: 'innerloop'
+      targetOS: Linux
+
+- stage: acc2
+  displayName: 'Acceptance Test 2'
+  dependsOn: build_test_package
+  jobs:
+    - template: /eng/pipelines/stage_acc2.yml
+      parameters:
+        isOfficialBuild: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+        testScope: 'innerloop'
+        targetOS: Linux
+
+- stage: Dev_Deployment
+  displayName: 'Deploy Development'
+  dependsOn:
+  - acc1
+  - acc2
+  condition: ${{variables.Deploy_Dev}}
+  jobs:
+    - template: /eng/pipelines/stage_dev.yml
+      parameters:
+        isOfficialBuild: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+        testScope: 'innerloop'
+        targetOS: Linux
+
+- stage: Formal_Prepare_Deployment
+  displayName: 'Deploy Prepare Release'
+  dependsOn: Dev_Deployment
+  condition: ${{variables.Deploy_Prepare}}
+  jobs:
+    - template: /eng/pipelines/stage_formal.yml
+      parameters:
+        isOfficialBuild: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+        testScope: 'innerloop'
+        targetOS: Linux
+
+- stage: Load_Release_Deployment
+  displayName: 'Deploy Release Test'
+  dependsOn: Dev_Deployment
+  condition: ${{variables.Deploy_Release}}
+  jobs:
+    - template: /eng/pipelines/stage_load.yml
+      parameters:
+        isOfficialBuild: ${{ notIn(variables['Build.Reason'], 'PullRequest') }}
+        testScope: 'innerloop'
+        targetOS: Linux
