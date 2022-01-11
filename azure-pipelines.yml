@@ -37,8 +37,6 @@ trigger:
     exclude:
     - /*.md
 
-stages:
-- stage: build_test_package
 jobs:
 - job: 'build_and_test'
   displayName: 'Build and Test'
