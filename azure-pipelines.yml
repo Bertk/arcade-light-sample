@@ -78,7 +78,7 @@ jobs:
       workingDirectory: '$(Build.SourcesDirectory)'
       publishTestResults: true
 
-  - task: reportgenerator@4
+  - task: reportgenerator@5
     displayName: 'Create Cobertura report'
     inputs:
       reports: '$(Build.SourcesDirectory)/**/coverage.opencover.xml'
