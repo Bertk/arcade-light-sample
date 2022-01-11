@@ -91,7 +91,7 @@ jobs:
       codeCoverageTool: Cobertura
       summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
 
-  - template: CheckNugetStatus.yml@templates
+  - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
     parameters:
       sourcePath: '$(Build.SourcesDirectory)/Source'
       nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
