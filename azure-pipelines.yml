@@ -93,7 +93,7 @@ jobs:
 
   - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
     parameters:
-      sourcePath: '$(Build.SourcesDirectory)/Source'
+      sourcePath: '$(Build.SourcesDirectory)/src'
       nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
       breakBuild: false
 
@@ -144,7 +144,6 @@ jobs:
         dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  $($SolutionPath)
         $projectFile = Split-Path $SolutionPath -Leaf
         $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
-      
         # rename it to the project's name
         # Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
     env:
