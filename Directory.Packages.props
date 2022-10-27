@@ -22,8 +22,9 @@
     <PackageVersion Include="Microsoft.Build.Framework" Version="17.3.2" />
     <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.3.2" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.3.2" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" />

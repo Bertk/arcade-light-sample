@@ -136,9 +136,9 @@ jobs:
         dotnet tool list
         # build additional parameters
         $biopPath = "-biop '$(Build.SourcesDirectory)/artifacts'"
-        $outputPath = "$(Build.ArtifactStagingDirectory)/SBOM"
+        $outputPath = "$env:BUILD_ARTIFACTSTAGINGDIRECTORY/SBOM"
         if ( ! ( Test-Path -Path "$outputPath" -PathType Container )) {
-           New-Item -Path "$(Build.ArtifactStagingDirectory)" -Name SBOM" -ItemType "directory"
+           New-Item -Path "$env:BUILD_ARTIFACTSTAGINGDIRECTORY" -Name SBOM" -ItemType "directory"
            }
         Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath} $($biopPath) $($SolutionPath)'" -Verbose
         dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  $($SolutionPath)
