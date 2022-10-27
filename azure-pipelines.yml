@@ -104,6 +104,7 @@ jobs:
 
 - job: 'Static_Code_Analysis'
   displayName: 'Static code analysis'
+  condition: false
   dependsOn: build_and_test
   pool:
     vmImage: 'windows-latest'
