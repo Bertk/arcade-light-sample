@@ -93,7 +93,7 @@ jobs:
 
   - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
     parameters:
-      sourcePath: '$(Build.SourcesDirectory)/Source'
+      sourcePath: '$(Build.SourcesDirectory)/src'
       nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
       breakBuild: false
 
@@ -104,6 +104,7 @@ jobs:
 
 - job: 'Static_Code_Analysis'
   displayName: 'Static code analysis'
+  condition: false
   dependsOn: build_and_test
   pool:
     vmImage: 'windows-latest'
@@ -136,17 +137,16 @@ jobs:
         dotnet tool list
         # build additional parameters
         $biopPath = "-biop '$(Build.SourcesDirectory)/artifacts'"
-        $outputPath = "$(Build.ArtifactStagingDirectory)/SBOM"
+        $outputPath = "$env:BUILD_ARTIFACTSTAGINGDIRECTORY/SBOM"
         if ( ! ( Test-Path -Path "$outputPath" -PathType Container )) {
-           New-Item -Path "$(Build.ArtifactStagingDirectory)" -Name SBOM" -ItemType "directory"
+           New-Item -Path "$env:BUILD_ARTIFACTSTAGINGDIRECTORY" -Name SBOM" -ItemType "directory"
            }
         Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath} $($biopPath) $($SolutionPath)'" -Verbose
         dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  $($SolutionPath)
         $projectFile = Split-Path $SolutionPath -Leaf
         $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
-      
         # rename it to the project's name
-        Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
+        # Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
