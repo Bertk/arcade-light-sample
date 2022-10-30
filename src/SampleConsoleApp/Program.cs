@@ -1,22 +1,25 @@
 using System;
 using McMaster.Extensions.CommandLineUtils;
 
-public class Program
+namespace SampleConsoleApp
 {
-    public static int Main(string[] args)
-        => CommandLineApplication.Execute<Program>(args);
-
-    [Option(Description = "The subject")]
-    public string Subject { get; } = "world";
-
-    [Option(ShortName = "n")]
-    public int Count { get; } = 1;
-
-    private void OnExecute()
+    public class Program
     {
-        for (var i = 0; i < Count; i++)
+        public static int Main(string[] args)
+            => CommandLineApplication.Execute<Program>(args);
+
+        [Option(Description = "The subject")]
+        public string Subject { get; } = "world";
+
+        [Option(ShortName = "n")]
+        public int Count { get; } = 1;
+
+        private void OnExecute()
         {
-            Console.WriteLine($"Hello {Subject}!");
+            for (var i = 0; i < Count; i++)
+            {
+                Console.WriteLine($"Hello {Subject}!");
+            }
         }
     }
 }

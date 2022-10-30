@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,7 +6,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <NoWarn>NU1507</NoWarn>
+    <NoWarn>$(NoWarn;NU1504;NU1507;CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
