@@ -104,7 +104,6 @@ jobs:
 
 - job: 'Static_Code_Analysis'
   displayName: 'Static code analysis'
-  condition: false
   dependsOn: build_and_test
   pool:
     vmImage: 'windows-latest'
@@ -142,9 +141,9 @@ jobs:
            New-Item -Path "$env:BUILD_ARTIFACTSTAGINGDIRECTORY" -Name SBOM" -ItemType "directory"
            }
         Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath} $($biopPath) $($SolutionPath)'" -Verbose
-        dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  $($SolutionPath)
-        $projectFile = Split-Path $SolutionPath -Leaf
-        $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
+        # dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  $($SolutionPath)
+        # $projectFile = Split-Path $SolutionPath -Leaf
+        # $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
         # rename it to the project's name
         # Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
     env:
