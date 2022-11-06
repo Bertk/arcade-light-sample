@@ -98,9 +98,6 @@ jobs:
   dependsOn: build_and_test
   pool:
     vmImage: 'windows-latest'
-  variables:
-  - name: system.debug
-    value: true
 
   steps:
   - task: UseDotNet@2
@@ -145,6 +142,11 @@ jobs:
         Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
+  - task: CopyFiles@2
+    inputs:
+      contents: '$(Build.SourcesDirectory)\artifacts\SBOM\**'
+      targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: sca'
