@@ -352,3 +352,5 @@ MigrationBackup/
 *.opencover.xml
 
 .dotnet/
+
+*bom.xml

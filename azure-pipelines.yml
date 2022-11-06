@@ -8,25 +8,16 @@ resources:
   - container: LinuxContainer
     image: mcr.microsoft.com/dotnet-buildtools-prereqs:ubuntu-16.04-cross-cfdd435-20190312152303
 
-parameters:
-  - name: 'Deploy_Dev_Stage'
-    displayName: Deploy to DEV environment
-    type: boolean
-    default: 'true'
-  - name: 'Deploy_Prepare_Stage'
-    displayName: Deploy Prepare
-    type: boolean
-    default: 'false'
-  - name: 'Deploy_Release_Stage'
-    displayName: Deploy Release
-    type: boolean
-    default: 'false'
 
 variables:
-  disable.coverage.autogenerate: 'true'
-  Configuration: 'Release'
-  SolutionPath: 'SampleSolution.sln'
-  DOTNET_ROLL_FORWARD: 'Major' 
+  - name: disable.coverage.autogenerate
+    value: 'true'
+  - name: Configuration
+    value: 'Release'
+  - name: SolutionPath
+    value: 'SampleSolution.sln'
+  - name: DOTNET_ROLL_FORWARD
+    value: 'Major'
 
 # Only run against main
 trigger:
@@ -40,6 +31,7 @@ trigger:
 jobs:
 - job: 'build_and_test'
   displayName: 'Build and Test'
+  condition: false
   pool:
     vmImage: 'windows-latest'
 
@@ -104,9 +96,12 @@ jobs:
 
 - job: 'Static_Code_Analysis'
   displayName: 'Static code analysis'
-  dependsOn: build_and_test
+#  dependsOn: build_and_test
   pool:
     vmImage: 'windows-latest'
+  variables:
+  - name: system.debug
+    value: true
 
   steps:
   - task: UseDotNet@2
@@ -135,17 +130,20 @@ jobs:
         dotnet tool restore
         dotnet tool list
         # build additional parameters
-        $biopPath = "-biop '$(Build.SourcesDirectory)/artifacts'"
-        $outputPath = "$env:BUILD_ARTIFACTSTAGINGDIRECTORY/SBOM"
+        $biopPath = "-biop '$(Build.SourcesDirectory)\artifacts'"
+        Write-Verbose -Message "$($biopPath)" -Verbose
+        $outputPath = "$(Build.SourcesDirectory)\artifacts\SBOM"
+        Write-Verbose -Message "$($outputPath)" -Verbose
         if ( ! ( Test-Path -Path "$outputPath" -PathType Container )) {
-           New-Item -Path "$env:BUILD_ARTIFACTSTAGINGDIRECTORY" -Name SBOM" -ItemType "directory"
+           New-Item -Path "$(Build.SourcesDirectory)\artifacts" -Name "SBOM" -ItemType "directory"
            }
-        Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath} $($biopPath) $($SolutionPath)'" -Verbose
-        # dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  $($SolutionPath)
-        # $projectFile = Split-Path $SolutionPath -Leaf
-        # $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
+        Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath) ${{variables.SolutionPath}}'" -Verbose
+        dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  ${{variables.SolutionPath}}
+        $projectFile = Split-Path $(variables.SolutionPath) -Leaf
+        # eliminate file extensions
+        $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
         # rename it to the project's name
-        # Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
+        Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
