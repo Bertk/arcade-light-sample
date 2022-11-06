@@ -31,7 +31,6 @@ trigger:
 jobs:
 - job: 'build_and_test'
   displayName: 'Build and Test'
-  condition: false
   pool:
     vmImage: 'windows-latest'
 
@@ -96,7 +95,7 @@ jobs:
 
 - job: 'Static_Code_Analysis'
   displayName: 'Static code analysis'
-#  dependsOn: build_and_test
+  dependsOn: build_and_test
   pool:
     vmImage: 'windows-latest'
   variables:
