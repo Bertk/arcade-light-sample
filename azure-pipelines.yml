@@ -139,7 +139,7 @@ jobs:
            }
         Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath) ${{variables.SolutionPath}}'" -Verbose
         dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  ${{variables.SolutionPath}}
-        $projectFile = Split-Path $(variables.SolutionPath) -Leaf
+        $projectFile = Split-Path ${{variables.SolutionPath}} -Leaf
         # eliminate file extensions
         $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
         # rename it to the project's name
