@@ -130,7 +130,7 @@ jobs:
         dotnet tool restore
         dotnet tool list
         # build additional parameters
-        $biopPath = "-biop '$(Build.SourcesDirectory)\artifacts'"
+        $biopPath = "-biop $(Build.SourcesDirectory)\artifacts"
         Write-Verbose -Message "$($biopPath)" -Verbose
         $outputPath = "$(Build.SourcesDirectory)\artifacts\SBOM"
         Write-Verbose -Message "$($outputPath)" -Verbose
@@ -150,4 +150,5 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: sca'
     inputs:
+      artifactName: SBOM
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
