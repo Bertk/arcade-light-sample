@@ -51,9 +51,9 @@ steps:
 - publish: '${{parameters.outputPath}}/${{parameters.targetFolder}}'
   displayName: 'SBOM: Publish Artifact'
   artifact: SBOM
-  condition: and(succeeded(), ${{parameters.publishSBOM}}, ne(${{parameters.outputPath}},''))
+  condition: and(succeeded(), ${{parameters.publishSBOM}}, ne('${{parameters.outputPath}}',''))
 
 - publish: '$(Build.SourcesDirectory)/${{parameters.targetFolder}}'
   displayName: 'SBOM: Publish Artifact'
   artifact: SBOM
-  condition: and(succeeded(), ${{parameters.publishSBOM}}, eq(${{parameters.outputPath}},''))
+  condition: and(succeeded(), ${{parameters.publishSBOM}}, eq('${{parameters.outputPath}}',''))
