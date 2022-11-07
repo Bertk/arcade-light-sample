@@ -30,7 +30,14 @@ steps:
       if ("${{parameters.outputPath}}" -ne ""){
         Write-Verbose -Message "outputPath: '${{parameters.outputPath}}'" -Verbose
         $outputPath = "-biop ${{parameters.outputPath}}"
-        }
+        if ( ! ( Test-Path -Path "${{parameters.outputPath}}/${{parameters.targetFolder}}" -PathType Container )) {
+            New-Item -Path "${{parameters.outputPath}}" -Name "${{parameters.targetFolder}}" -ItemType "directory"
+            }
+      } else {
+        if ( ! ( Test-Path -Path "$(Build.SourcesDirectory)/${{parameters.targetFolder}}" -PathType Container )) {
+            New-Item -Path "$(Build.SourcesDirectory)" -Name "${{parameters.targetFolder}}" -ItemType "directory"
+            }
+      }
       Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o ${{parameters.targetFolder}} $($outputPath) ${{parameters.projects}}'" -Verbose
       dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o "${{parameters.targetFolder}}" $($outputPath) ${{parameters.projects}}
       $projectFile = Split-Path ${{parameters.projects}} -Leaf
