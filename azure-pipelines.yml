@@ -107,10 +107,10 @@ jobs:
       useGlobalJson: true
 
   - task: NuGetAuthenticate@1
-    displayName: "SBOM: Authenticate on nuget feeds"
+    displayName: "Authenticate on nuget feeds"
 
   - task: DotNetCoreCLI@2
-    displayName: "SBOM: Restore dotnet Projects"
+    displayName: "Restore dotnet Projects"
     inputs:
       command: restore
       projects: '$(SolutionPath)'
