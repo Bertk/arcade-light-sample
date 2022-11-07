@@ -106,50 +106,19 @@ jobs:
       packageType: 'sdk'
       useGlobalJson: true
 
-  - task: NuGetAuthenticate@0
-    displayName: "LicenseList: Authenticate on nuget feeds"
+  - task: NuGetAuthenticate@1
+    displayName: "Authenticate on nuget feeds"
 
   - task: DotNetCoreCLI@2
-    displayName: "LicenseList: Restore dotnet Projects"
+    displayName: "Restore dotnet Projects"
     inputs:
       command: restore
       projects: '$(SolutionPath)'
       feedsToUse: config
       nugetConfigPath: 'nuget.config'
 
-  - task: PowerShell@2
-    displayName: 'LicenseList: Run dotnet-cyclonedx'
-    inputs:
-      targetType: 'inline'
-      pwsh: true
-      script: |
-        dotnet tool restore
-        dotnet tool list
-        # build additional parameters
-        $biopPath = "-biop $(Build.SourcesDirectory)\artifacts"
-        Write-Verbose -Message "$($biopPath)" -Verbose
-        $outputPath = "$(Build.SourcesDirectory)\artifacts\SBOM"
-        Write-Verbose -Message "$($outputPath)" -Verbose
-        if ( ! ( Test-Path -Path "$outputPath" -PathType Container )) {
-           New-Item -Path "$(Build.SourcesDirectory)\artifacts" -Name "SBOM" -ItemType "directory"
-           }
-        Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath) ${{variables.SolutionPath}}'" -Verbose
-        dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o $($outputPath) $($biopPath)  ${{variables.SolutionPath}}
-        $projectFile = Split-Path ${{variables.SolutionPath}} -Leaf
-        # eliminate file extensions
-        $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
-        # rename it to the project's name
-        Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
-    env:
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-
-  - task: CopyFiles@2
-    inputs:
-      contents: '$(Build.SourcesDirectory)\artifacts\SBOM\**'
-      targetFolder: $(Build.ArtifactStagingDirectory)
-
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: sca'
-    inputs:
-      artifactName: SBOM
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+  - template: eng/azuredevops/pipelines/templates/GenerateSBOM.yml
+    parameters:
+      projects: '$(SolutionPath)'
+      outputPath: '$(Build.SourcesDirectory)\artifacts'
+      publishSBOM: true
