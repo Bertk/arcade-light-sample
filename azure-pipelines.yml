@@ -120,5 +120,5 @@ jobs:
   - template: eng/azuredevops/pipelines/templates/GenerateSBOM.yml
     parameters:
       projects: '$(SolutionPath)'
-      outputPath: '$(Build.SourcesDirectory)/artifacts'
+      outputPath: '$(Build.SourcesDirectory)\artifacts'
       publishSBOM: true
