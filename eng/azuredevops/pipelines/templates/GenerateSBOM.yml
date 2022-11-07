@@ -43,7 +43,7 @@ steps:
       # eliminate file extensions
       $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
       # rename it to the project's name
-      Rename-Item "${{parameters.targetFolder}}/bom.xml" "$($projectName).bom.xml"
+      Rename-Item "$($targetPath)/bom.xml" "$($projectName).bom.xml"
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
