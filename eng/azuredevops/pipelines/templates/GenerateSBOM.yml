@@ -1,0 +1,57 @@
+# generate Software Bill of Materials
+
+parameters:
+  projects: ''
+  workingDir: ''
+  targetFolder: 'SBOM'
+  outputPath: ''
+  publishSBOM: false
+
+
+# tool source code repositories:
+# - https://github.com/CycloneDX/cyclonedx-dotnet (.Net Core)
+# - https://github.com/CycloneDX/cyclonedx-node-module (should be triggered after 'npm install')
+#
+# - CycloneDX XML Reference v1.2 https://cyclonedx.org/docs/1.2/
+
+steps:
+- task: PowerShell@2
+  displayName: 'SBOM: Run dotnet-cyclonedx'
+  inputs:
+    targetType: 'inline'
+    pwsh: true
+    script: |
+      dotnet tool restore
+      dotnet tool list
+      # Write-Verbose parameters
+      Write-Verbose -Message "$biopPath: '$($biopPath)'" -Verbose
+      Write-Verbose -Message "outputPath: '${{parameters.outputPath}}'" -Verbose
+      if ( ! ( Test-Path -Path "$(Build.SourcesDirectory)/${{parameters.targetFolder}}" -PathType Container )) {
+          New-Item -Path "$(Build.SourcesDirectory)" -Name "${{parameters.targetFolder}}" -ItemType "directory"
+          }
+      # build additional parameters
+      if ("${{parameters.outputPath}}" -ne ""){
+        $outputPath = "-biop ${{parameters.outputPath}}"
+        }
+      Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o ${{parameters.targetFolder}} $($outputPath) ${{parameters.projects}}'" -Verbose
+      dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o "${{parameters.targetFolder}}" $($outputPath) ${{parameters.projects}}
+      $projectFile = Split-Path ${{parameters.projects}} -Leaf
+      # eliminate file extensions
+      $projectName = "$projectFile".Replace(".sln", "").Replace(".csproj", "")
+      # rename it to the project's name
+      Rename-Item "$($outputPath)/bom.xml" "$($projectName).bom.xml"
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
+- task: CopyFiles@2
+  inputs:
+    contents: '$(Build.SourcesDirectory)\artifacts\SBOM\**'
+    targetFolder: $(Build.ArtifactStagingDirectory)
+  condition: and(succeeded(), ${{parameters.publishSBOM}})
+
+- task: PublishBuildArtifacts@1
+  displayName: 'SBOM: Publish Artifact'
+  inputs:
+    artifactName: SBOM
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+  condition: and(succeeded(), ${{parameters.publishSBOM}})
