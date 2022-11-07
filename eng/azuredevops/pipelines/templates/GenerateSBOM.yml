@@ -23,14 +23,12 @@ steps:
     script: |
       dotnet tool restore
       dotnet tool list
-      # Write-Verbose parameters
-      Write-Verbose -Message "$biopPath: '$($biopPath)'" -Verbose
-      Write-Verbose -Message "outputPath: '${{parameters.outputPath}}'" -Verbose
       if ( ! ( Test-Path -Path "$(Build.SourcesDirectory)/${{parameters.targetFolder}}" -PathType Container )) {
           New-Item -Path "$(Build.SourcesDirectory)" -Name "${{parameters.targetFolder}}" -ItemType "directory"
           }
       # build additional parameters
       if ("${{parameters.outputPath}}" -ne ""){
+        Write-Verbose -Message "outputPath: '${{parameters.outputPath}}'" -Verbose
         $outputPath = "-biop ${{parameters.outputPath}}"
         }
       Write-Verbose -Message "run CycloneDX: 'dotnet dotnet-CycloneDX --exclude-test-projects --exclude-dev -dpr -o ${{parameters.targetFolder}} $($outputPath) ${{parameters.projects}}'" -Verbose
