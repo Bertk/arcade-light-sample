@@ -12,5 +12,5 @@
     "^refs/tags/v\\d+\\.\\d+"
   ],
     "buildNumberOffset": "0",
-    "version": "11.0"
+    "version": "1.0"
 }

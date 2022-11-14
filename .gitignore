@@ -348,9 +348,24 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-
+# ignore vscode  configuration folder
+.vscode/
+# OpenCover UI analysis results
+OpenCover/
 *.opencover.xml
+*.cobertura.xml
+
+# MSBuild Binary and Structured Log
+*.binlog
+dist/
+testResults/
+# security-scan results report format
+*.sarif
+
+angular-webpack/
+babel-webpack/
+.angular/
 
 .dotnet/
-
 *bom.xml
+
