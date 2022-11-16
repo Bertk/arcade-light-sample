@@ -10,8 +10,6 @@ resources:
 
 
 variables:
-  - name: disable.coverage.autogenerate
-    value: 'true'
   - name: Configuration
     value: 'Release'
   - name: SolutionPath
@@ -69,24 +67,19 @@ jobs:
       workingDirectory: '$(Build.SourcesDirectory)'
       publishTestResults: true
 
-  - task: reportgenerator@5
-    displayName: 'Create Cobertura report'
-    inputs:
-      reports: '$(Build.SourcesDirectory)/**/coverage.opencover.xml'
-      reporttypes: 'HtmlInline_AzurePipelines;Cobertura'
-      targetdir: '$(Build.SourcesDirectory)/CoverageResults'
-
-  - task: PublishCodeCoverageResults@1
-    displayName: 'Publish code coverage'
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
-
   - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
     parameters:
       sourcePath: '$(Build.SourcesDirectory)/src'
       nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
       breakBuild: false
+
+  - template: eng/azuredevops/pipelines/templates/CoverageResults.yml
+    parameters:
+      reports: $(Build.SourcesDirectory)/**/coverage.opencover.xml
+      configuration: $(Configuration)
+      condition: succeeded()
+      assemblyfilters: '-xunit'
+      breakBuild: false      
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: drop'

@@ -3,17 +3,18 @@
 # Precondition: execute unit tests using [test.cmd | test.ps1 | test.sh]
 
 parameters:
-  assemblyfilters: '-xunit*'
   condition: 'succeeded()'
-  sourcePath: ''
+  reports: ''
+  assemblyfilters: '-xunit*'
   breakBuild: false
+  configuration: ''
+
 steps:
-# publish test code coverage (begin)
 - task: reportgenerator@5
   displayName: ReportGenerator
   condition: ${{parameters.condition}}
   inputs:
-    reports: $(Build.SourcesDirectory)/**/*.coverage.cobertura.xml
+    reports: ${{parameters.reports}}
     targetdir: $(Build.SourcesDirectory)/artifacts/CoverageReport
     reporttypes: Html;HtmlInline_AzurePipelines_Dark;Cobertura
     verbosity: 'Verbose'
@@ -21,12 +22,14 @@ steps:
 
 - publish: '$(Build.SourcesDirectory)/artifacts/TestResults'
   displayName: 'Publish TestResults Artifacts'
-  artifact: TestResults_$(Agent.Os)_$(_BuildConfig)
+  artifact: TestResults_$(Agent.Os)_${{parameters.configuration}}
   condition: ${{parameters.condition}}
+
 - publish: '$(Build.SourcesDirectory)/artifacts/CoverageReport'
   displayName: 'Publish CoverageReport Artifact'
-  artifact: CoverageResults_$(Agent.Os)_$(_BuildConfig)
+  artifact: CoverageResults_$(Agent.Os)_${{parameters.configuration}}
   condition: ${{parameters.condition}}
+
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage'
   condition: ${{parameters.condition}}
@@ -34,4 +37,3 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/CoverageReport/Cobertura.xml'
     failIfCoverageEmpty: ${{parameters.breakBuild}}
-# publish test code coverage (end)
