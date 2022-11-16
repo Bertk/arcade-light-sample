@@ -20,11 +20,6 @@ steps:
     verbosity: 'Verbose'
     assemblyfilters: ${{parameters.assemblyfilters}}
 
-- publish: '$(Build.SourcesDirectory)/artifacts/TestResults'
-  displayName: 'Publish TestResults Artifacts'
-  artifact: TestResults_$(Agent.Os)_${{parameters.configuration}}
-  condition: ${{parameters.condition}}
-
 - publish: '$(Build.SourcesDirectory)/artifacts/CoverageReport'
   displayName: 'Publish CoverageReport Artifact'
   artifact: CoverageResults_$(Agent.Os)_${{parameters.configuration}}
