@@ -1,0 +1,10 @@
+variables:
+  # Cannot use key:value syntax in root defined variables
+  - name: _TeamName
+    value: arcade-light
+  - name: _RunAsPublic
+    value: True
+  - name: _InternalBuildArgs
+    value: ''
+  - name: _SolutionFile
+    value: 'SampleSolution.sln'
