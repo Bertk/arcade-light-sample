@@ -3,12 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-resources:
-  containers:
-  - container: LinuxContainer
-    image: mcr.microsoft.com/dotnet-buildtools-prereqs:ubuntu-16.04-cross-cfdd435-20190312152303
-
-
 variables:
   - name: Configuration
     value: 'Release'
@@ -16,6 +10,8 @@ variables:
     value: 'SampleSolution.sln'
   - name: DOTNET_ROLL_FORWARD
     value: 'Major'
+  - name: _BuildConfig
+    value: 'Debug'
 
 # Only run against main
 trigger:
@@ -85,6 +81,40 @@ jobs:
     displayName: 'Publish Artifact: drop'
     inputs:
       PathtoPublish: '$(build.artifactstagingdirectory)'
+
+- job: 'arcade_light_build'
+  displayName: 'Build and Test'
+  pool:
+    vmImage: 'windows-latest'
+
+  steps:
+  - task: NuGetAuthenticate@1
+  - powershell: eng\commonlight\build.ps1
+      -configuration $(_BuildConfig)
+      -prepareMachine
+      -ci
+      -restore
+      -test
+      -projects $(Build.SourcesDirectory)\**\*Tests.csproj
+      /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
+      /p:RestoreUsingNuGetTargets=false
+    displayName: Run Tests
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
+
+  - template: eng/azuredevops/pipelines/templates/CoverageResults.yml
+    parameters:
+      reports: $(Build.SourcesDirectory)/**/*.coverage.cobertura.xml
+      configuration: $(Configuration)
+      condition: succeeded()
+      assemblyfilters: '-xunit'
+      breakBuild: false      
 
 - job: 'Static_Code_Analysis'
   displayName: 'Static code analysis'
