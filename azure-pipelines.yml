@@ -63,19 +63,13 @@ jobs:
       workingDirectory: '$(Build.SourcesDirectory)'
       publishTestResults: true
 
-  - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
-    parameters:
-      sourcePath: '$(Build.SourcesDirectory)/src'
-      nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
-      breakBuild: false
-
-  - template: eng/azuredevops/pipelines/templates/CoverageResults.yml
-    parameters:
-      reports: $(Build.SourcesDirectory)/**/coverage.opencover.xml
-      configuration: $(Configuration)
-      condition: succeeded()
-      assemblyfilters: '-xunit'
-      breakBuild: false      
+  #- template: eng/azuredevops/pipelines/templates/CoverageResults.yml
+  #  parameters:
+  #    reports: $(Build.SourcesDirectory)/**/coverage.opencover.xml
+  #    configuration: $(Configuration)
+  #    condition: succeeded()
+  #    assemblyfilters: '-xunit'
+  #    breakBuild: false      
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: drop'
@@ -140,6 +134,12 @@ jobs:
       projects: '$(SolutionPath)'
       feedsToUse: config
       nugetConfigPath: 'nuget.config'
+
+  - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
+    parameters:
+      sourcePath: '$(Build.SourcesDirectory)/src'
+      nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
+      breakBuild: true
 
   - template: eng/azuredevops/pipelines/templates/GenerateSBOM.yml
     parameters:
