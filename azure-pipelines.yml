@@ -62,7 +62,7 @@ jobs:
       command: test
       configuration: $(Configuration)
       projects: |
-        **/SampleConsoleAppTest.csproj
+        **/*.Tests.csproj
       arguments: '--no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=Coverage/'
       workingDirectory: '$(Build.SourcesDirectory)'
       publishTestResults: true
