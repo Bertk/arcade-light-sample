@@ -83,7 +83,7 @@ jobs:
       PathtoPublish: '$(build.artifactstagingdirectory)'
 
 - job: 'arcade_light_build'
-  displayName: 'Build and Test'
+  displayName: 'Build and Test (ArcadeLight)'
   pool:
     vmImage: 'windows-latest'
 
