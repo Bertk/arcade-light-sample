@@ -81,6 +81,7 @@ stages:
 
 - stage: build_ArcadeLight
   displayName: Build (ArcadeLight)
+  dependsOn: []
   jobs:
     - template: /eng/azuredevops/pipelines/jobs/jobs.yml
       parameters:
