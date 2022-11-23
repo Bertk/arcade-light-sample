@@ -78,7 +78,9 @@ stages:
       displayName: 'Publish Artifact: drop'
       inputs:
         PathtoPublish: '$(build.artifactstagingdirectory)'
+
 - stage: build_ArcadeLight
+  displayName: Build (ArcadeLight)
   jobs:
     - template: /eng/azuredevops/pipelines/jobs/jobs.yml
       parameters:
@@ -86,6 +88,7 @@ stages:
           publish:
             artifacts: true
             logs: true
+            packages: false
         workspace:
           clean: all
         jobs:
