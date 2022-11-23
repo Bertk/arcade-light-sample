@@ -89,39 +89,39 @@ stages:
         workspace:
           clean: all
         jobs:
-    - job: 'arcade_light_build'
-      displayName: 'Build and Test (ArcadeLight)'
-      pool:
-        vmImage: 'windows-latest'
-      steps:
-      - task: NuGetAuthenticate@1
-      - powershell: eng\commonlight\build.ps1
-          -configuration $(_BuildConfig)
-          -prepareMachine
-          -ci
-          -restore
-          -build
-          -test
-          -projects $(Build.SourcesDirectory)\**\*Tests.csproj
-          /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
-          /p:RestoreUsingNuGetTargets=false
-        displayName: Run Tests
-        env:
-          SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        - job: 'arcade_light_build'
+          displayName: 'Build and Test (ArcadeLight)'
+          pool:
+            vmImage: 'windows-latest'
+          steps:
+          - task: NuGetAuthenticate@1
+          - powershell: eng\commonlight\build.ps1
+              -configuration $(_BuildConfig)
+              -prepareMachine
+              -ci
+              -restore
+              -build
+              -test
+              -projects $(Build.SourcesDirectory)\**\*Tests.csproj
+              /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
+              /p:RestoreUsingNuGetTargets=false
+            displayName: Run Tests
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-      - task: PublishTestResults@2
-        condition: succeededOrFailed()
-        inputs:
-          testRunner: VSTest
-          testResultsFiles: '**/*.trx'
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testRunner: VSTest
+              testResultsFiles: '**/*.trx'
 
-      - template: ../templates/CoverageResults.yml
-        parameters:
-          reports: $(Build.SourcesDirectory)/**/*.coverage.cobertura.xml
-          configuration: $(Configuration)
-          condition: succeeded()
-          assemblyfilters: '-xunit'
-          breakBuild: false
+          - template: ../templates/CoverageResults.yml
+            parameters:
+              reports: $(Build.SourcesDirectory)/**/*.coverage.cobertura.xml
+              configuration: $(Configuration)
+              condition: succeeded()
+              assemblyfilters: '-xunit'
+              breakBuild: false
 
 - stage: Validate
   displayName: Validate
