@@ -89,7 +89,6 @@ stages:
           publish:
             artifacts: true
             logs: true
-            packages: false
         workspace:
           clean: all
         jobs:
