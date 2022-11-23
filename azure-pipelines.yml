@@ -22,127 +22,145 @@ trigger:
     exclude:
     - /*.md
 
-jobs:
-- job: 'build_and_test'
-  displayName: 'Build and Test'
-  pool:
-    vmImage: 'windows-latest'
+stages:
+- stage: build_Azure_DevOps
+  displayName: Build (Azure DevOps tasks)
+  jobs:
+  - job: 'build_and_test'
+    displayName: 'Build and Test'
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk'
+      inputs:
+        packageType: sdk
+        useGlobalJson: true
 
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core sdk'
-    inputs:
-      packageType: sdk
-      useGlobalJson: true
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: restore
+        projects: '$(SolutionPath)'
+        feedsToUse: config
+        nugetConfigPath: NuGet.Config
+        noCache: true
 
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet restore'
-    inputs:
-      command: restore
-      projects: '$(SolutionPath)'
-      feedsToUse: config
-      nugetConfigPath: NuGet.Config
-      noCache: true
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        command: build
+        configuration: '$(Configuration)'
+        projects: '$(SolutionPath)'
+        arguments: '--no-restore'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet build'
-    inputs:
-      command: build
-      configuration: '$(Configuration)'
-      projects: '$(SolutionPath)'
-      arguments: '--no-restore'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet unit test'
+      inputs:
+        command: test
+        configuration: $(Configuration)
+        projects: |
+          **/*.Tests.csproj
+        arguments: '--no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=Coverage/'
+        workingDirectory: '$(Build.SourcesDirectory)'
+        publishTestResults: true
 
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet unit test'
-    inputs:
-      command: test
-      configuration: $(Configuration)
-      projects: |
-        **/*.Tests.csproj
-      arguments: '--no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=Coverage/'
-      workingDirectory: '$(Build.SourcesDirectory)'
-      publishTestResults: true
+    #- template: eng/azuredevops/pipelines/templates/CoverageResults.yml
+    #  parameters:
+    #    reports: $(Build.SourcesDirectory)/**/coverage.opencover.xml
+    #    configuration: $(Configuration)
+    #    condition: succeeded()
+    #    assemblyfilters: '-xunit'
+    #    breakBuild: false
 
-  #- template: eng/azuredevops/pipelines/templates/CoverageResults.yml
-  #  parameters:
-  #    reports: $(Build.SourcesDirectory)/**/coverage.opencover.xml
-  #    configuration: $(Configuration)
-  #    condition: succeeded()
-  #    assemblyfilters: '-xunit'
-  #    breakBuild: false      
+    - task: PublishBuildArtifacts@1
+      enabled: false
+      displayName: 'Publish Artifact: drop'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: drop'
-    inputs:
-      PathtoPublish: '$(build.artifactstagingdirectory)'
+- stage: build_ArcadeLight
+  displayName: Build (ArcadeLight)
+  dependsOn: []
+  jobs:
+    - template: /eng/azuredevops/pipelines/jobs/jobs.yml
+      parameters:
+        artifacts:
+          publish:
+            artifacts: true
+            logs: true
+        workspace:
+          clean: all
+        jobs:
+        - job: 'arcade_light_build'
+          displayName: 'Build and Test (ArcadeLight)'
+          pool:
+            vmImage: 'windows-latest'
+          steps:
+          - task: NuGetAuthenticate@1
+          - powershell: eng\commonlight\build.ps1
+              -configuration $(_BuildConfig)
+              -prepareMachine
+              -ci
+              -restore
+              -build
+              -test
+              -projects $(Build.SourcesDirectory)\**\*Tests.csproj
+              /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
+              /p:RestoreUsingNuGetTargets=false
+            displayName: Run Tests
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-- job: 'arcade_light_build'
-  displayName: 'Build and Test (ArcadeLight)'
-  pool:
-    vmImage: 'windows-latest'
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testRunner: VSTest
+              testResultsFiles: '**/*.trx'
 
-  steps:
-  - task: NuGetAuthenticate@1
-  - powershell: eng\commonlight\build.ps1
-      -configuration $(_BuildConfig)
-      -prepareMachine
-      -ci
-      -restore
-      -build
-      -test
-      -projects $(Build.SourcesDirectory)\**\*Tests.csproj
-      /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
-      /p:RestoreUsingNuGetTargets=false
-    displayName: Run Tests
-    env:
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+          - template: ../templates/CoverageResults.yml
+            parameters:
+              reports: $(Build.SourcesDirectory)/**/*.coverage.cobertura.xml
+              configuration: $(Configuration)
+              condition: succeeded()
+              assemblyfilters: '-xunit'
+              breakBuild: false
 
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: '**/*.trx'
+- stage: Validate
+  displayName: Validate
+  dependsOn: build_Azure_DevOps
+  jobs:
+  - job: 'Static_Code_Analysis'
+    displayName: 'Static code analysis'
+    pool:
+      vmImage: 'windows-latest'
 
-  - template: eng/azuredevops/pipelines/templates/CoverageResults.yml
-    parameters:
-      reports: $(Build.SourcesDirectory)/**/*.coverage.cobertura.xml
-      configuration: $(Configuration)
-      condition: succeeded()
-      assemblyfilters: '-xunit'
-      breakBuild: false      
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use dotnet SDK (global)'
+      inputs:
+        packageType: 'sdk'
+        useGlobalJson: true
 
-- job: 'Static_Code_Analysis'
-  displayName: 'Static code analysis'
-  dependsOn: build_and_test
-  pool:
-    vmImage: 'windows-latest'
+    - task: NuGetAuthenticate@1
+      displayName: "Authenticate on nuget feeds"
 
-  steps:
-  - task: UseDotNet@2
-    displayName: 'Use dotnet SDK (global)'
-    inputs:
-      packageType: 'sdk'
-      useGlobalJson: true
+    - task: DotNetCoreCLI@2
+      displayName: "Restore dotnet Projects"
+      inputs:
+        command: restore
+        projects: '$(SolutionPath)'
+        feedsToUse: config
+        nugetConfigPath: 'nuget.config'
 
-  - task: NuGetAuthenticate@1
-    displayName: "Authenticate on nuget feeds"
+    - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
+      parameters:
+        sourcePath: '$(Build.SourcesDirectory)/src'
+        nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
+        breakBuild: true
 
-  - task: DotNetCoreCLI@2
-    displayName: "Restore dotnet Projects"
-    inputs:
-      command: restore
-      projects: '$(SolutionPath)'
-      feedsToUse: config
-      nugetConfigPath: 'nuget.config'
-
-  - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
-    parameters:
-      sourcePath: '$(Build.SourcesDirectory)/src'
-      nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
-      breakBuild: true
-
-  - template: eng/azuredevops/pipelines/templates/GenerateSBOM.yml
-    parameters:
-      projects: '$(SolutionPath)'
-      outputPath: '$(Build.SourcesDirectory)\artifacts'
-      publishSBOM: true
+    - template: eng/azuredevops/pipelines/templates/GenerateSBOM.yml
+      parameters:
+        projects: '$(SolutionPath)'
+        outputPath: '$(Build.SourcesDirectory)\artifacts'
+        publishSBOM: true
