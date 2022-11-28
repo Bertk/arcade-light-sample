@@ -109,7 +109,6 @@ stages:
               modifyOutputPath: false
           - powershell: eng\commonlight\build.ps1
               -configuration $(_BuildConfig)
-              -prepareMachine
               -ci
               -restore
               -test
