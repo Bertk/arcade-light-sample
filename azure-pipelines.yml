@@ -65,14 +65,6 @@ stages:
         workingDirectory: '$(Build.SourcesDirectory)'
         publishTestResults: true
 
-    #- template: eng/azuredevops/pipelines/templates/CoverageResults.yml
-    #  parameters:
-    #    reports: $(Build.SourcesDirectory)/**/coverage.opencover.xml
-    #    configuration: $(Configuration)
-    #    condition: succeeded()
-    #    assemblyfilters: '-xunit'
-    #    breakBuild: false
-
     - task: PublishBuildArtifacts@1
       enabled: false
       displayName: 'Publish Artifact: drop'
@@ -98,12 +90,27 @@ stages:
             vmImage: 'windows-latest'
           steps:
           - task: NuGetAuthenticate@1
-          - powershell: eng\commonlight\build.ps1
+          - script: eng\commonlight\cibuild.cmd
               -configuration $(_BuildConfig)
               -prepareMachine
+              $(_InternalBuildArgs)
+              /p:Test=false
+            displayName: Windows Build / Publish
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+          # vstest with coverlet.collector requires 'publish' of test project to generate coverage data
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'publish'
+              arguments: '-f net6.0'
+              publishWebProjects: false
+              projects: 'src/**/*Tests.csproj'
+              zipAfterPublish: false
+              modifyOutputPath: false
+          - powershell: eng\commonlight\build.ps1
+              -configuration $(_BuildConfig)
               -ci
               -restore
-              -build
               -test
               -projects $(Build.SourcesDirectory)\**\*Tests.csproj
               /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
@@ -120,7 +127,7 @@ stages:
 
           - template: ../templates/CoverageResults.yml
             parameters:
-              reports: $(Build.SourcesDirectory)/**/*.coverage.cobertura.xml
+              reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
               configuration: $(Configuration)
               condition: succeeded()
               assemblyfilters: '-xunit'
