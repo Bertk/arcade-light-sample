@@ -140,7 +140,7 @@ stages:
             testRunner: VSTest
             testResultsFiles: '**/*.trx'
 
-        - template: ../templates/CoverageResults.yml
+        - template: ../steps/CoverageResults.yml
           parameters:
             reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
             configuration: $(_BuildConfig)
@@ -175,13 +175,13 @@ stages:
         feedsToUse: config
         nugetConfigPath: 'nuget.config'
 
-    - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
+    - template: eng/azuredevops/pipelines/steps/CheckNugetStatus.yml
       parameters:
         sourcePath: '$(Build.SourcesDirectory)/src'
         nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
         breakBuild: true
 
-    - template: eng/azuredevops/pipelines/templates/GenerateSBOM.yml
+    - template: eng/azuredevops/pipelines/steps/GenerateSBOM.yml
       parameters:
         projects: '$(SolutionPath)'
         outputPath: '$(Build.SourcesDirectory)\artifacts'
