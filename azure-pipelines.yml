@@ -4,14 +4,15 @@
 # https://aka.ms/yaml
 
 variables:
-  - name: Configuration
-    value: 'Debug'
-  - name: SolutionPath
-    value: 'SampleSolution.sln'
-  - name: DOTNET_ROLL_FORWARD
-    value: 'Major'
-  - name: _BuildConfig
-    value: 'Debug'
+- template: eng/common-variables.yml
+- name: DOTNET_CLI_TELEMETRY_OPTOUT
+  value: 1
+- name: Configuration
+  value: 'Debug'
+- name: SolutionPath
+  value: 'SampleSolution.sln'
+- name: DOTNET_ROLL_FORWARD
+  value: 'Major'
 
 # Only run against main
 trigger:
@@ -88,6 +89,17 @@ stages:
           displayName: 'Build and Test (ArcadeLight)'
           pool:
             vmImage: 'windows-latest'
+        strategy:
+          matrix:
+            Build_Release:
+              _BuildConfig: Release
+            ${{ if eq(variables._RunAsPublic, True) }}:
+              Build_Debug:
+                _BuildConfig: Debug
+        preSteps:
+        - checkout: self
+          fetchDepth: 0
+          clean: true
           steps:
           - task: NuGetAuthenticate@1
           - script: eng\commonlight\cibuild.cmd
@@ -100,6 +112,7 @@ stages:
               SYSTEM_ACCESSTOKEN: $(System.AccessToken)
           # vstest with coverlet.collector requires 'publish' of test project to generate coverage data
           - task: DotNetCoreCLI@2
+            displayName: Publish test project
             inputs:
               command: 'publish'
               arguments: '-f net6.0 --configuration $(_BuildConfig)'
@@ -128,7 +141,7 @@ stages:
           - template: ../templates/CoverageResults.yml
             parameters:
               reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
-              configuration: $(Configuration)
+              configuration: $(_BuildConfig)
               condition: succeeded()
               assemblyfilters: '-xunit'
               breakBuild: false
