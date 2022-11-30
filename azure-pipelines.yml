@@ -5,7 +5,7 @@
 
 variables:
   - name: Configuration
-    value: 'Release'
+    value: 'Debug'
   - name: SolutionPath
     value: 'SampleSolution.sln'
   - name: DOTNET_ROLL_FORWARD
@@ -102,7 +102,7 @@ stages:
           - task: DotNetCoreCLI@2
             inputs:
               command: 'publish'
-              arguments: '-f net6.0'
+              arguments: '-f net6.0 --configuration $(_BuildConfig)'
               publishWebProjects: false
               projects: 'src/**/*Tests.csproj'
               zipAfterPublish: false
