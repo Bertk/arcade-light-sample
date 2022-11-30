@@ -4,14 +4,17 @@
 # https://aka.ms/yaml
 
 variables:
-  - name: Configuration
-    value: 'Release'
-  - name: SolutionPath
-    value: 'SampleSolution.sln'
-  - name: DOTNET_ROLL_FORWARD
-    value: 'Major'
-  - name: _BuildConfig
-    value: 'Debug'
+- template: eng/common-variables.yml
+- name: DOTNET_CLI_TELEMETRY_OPTOUT
+  value: 1
+- name: Configuration
+  value: 'Debug'
+- name: SolutionPath
+  value: 'SampleSolution.sln'
+- name: DOTNET_ROLL_FORWARD
+  value: 'Major'
+- name: disable.coverage.autogenerate
+  value: 'false'
 
 # Only run against main
 trigger:
@@ -88,50 +91,62 @@ stages:
           displayName: 'Build and Test (ArcadeLight)'
           pool:
             vmImage: 'windows-latest'
-          steps:
-          - task: NuGetAuthenticate@1
-          - script: eng\commonlight\cibuild.cmd
-              -configuration $(_BuildConfig)
-              -prepareMachine
-              $(_InternalBuildArgs)
-              /p:Test=false
-            displayName: Windows Build / Publish
-            env:
-              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-          # vstest with coverlet.collector requires 'publish' of test project to generate coverage data
-          - task: DotNetCoreCLI@2
-            inputs:
-              command: 'publish'
-              arguments: '-f net6.0'
-              publishWebProjects: false
-              projects: 'src/**/*Tests.csproj'
-              zipAfterPublish: false
-              modifyOutputPath: false
-          - powershell: eng\commonlight\build.ps1
-              -configuration $(_BuildConfig)
-              -ci
-              -restore
-              -test
-              -projects $(Build.SourcesDirectory)\**\*Tests.csproj
-              /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
-              /p:RestoreUsingNuGetTargets=false
-            displayName: Run Tests
-            env:
-              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        strategy:
+          matrix:
+            Build_Release:
+              _BuildConfig: Release
+            ${{ if eq(variables._RunAsPublic, True) }}:
+              Build_Debug:
+                _BuildConfig: Debug
+        preSteps:
+        - checkout: self
+          fetchDepth: 0
+          clean: true
+        steps:
+        - task: NuGetAuthenticate@1
+        - script: eng\commonlight\cibuild.cmd
+            -configuration $(_BuildConfig)
+            -prepareMachine
+            $(_InternalBuildArgs)
+            /p:Test=false
+          displayName: Windows Build / Publish
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        # vstest with coverlet.collector requires 'publish' of test project to generate coverage data
+        - task: DotNetCoreCLI@2
+          displayName: Publish test project
+          inputs:
+            command: 'publish'
+            arguments: '-f net6.0 --configuration $(_BuildConfig)'
+            publishWebProjects: false
+            projects: 'src/**/*Tests.csproj'
+            zipAfterPublish: false
+            modifyOutputPath: false
+        - powershell: eng\commonlight\build.ps1
+            -configuration $(_BuildConfig)
+            -ci
+            -restore
+            -test
+            -projects $(Build.SourcesDirectory)\**\*Tests.csproj
+            /bl:$(Build.SourcesDirectory)\artifacts\log\$(_BuildConfig)\test-windows.binlog
+            /p:RestoreUsingNuGetTargets=false
+          displayName: Run Tests
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-          - task: PublishTestResults@2
-            condition: succeededOrFailed()
-            inputs:
-              testRunner: VSTest
-              testResultsFiles: '**/*.trx'
+        - task: PublishTestResults@2
+          condition: succeededOrFailed()
+          inputs:
+            testRunner: VSTest
+            testResultsFiles: '**/*.trx'
 
-          - template: ../templates/CoverageResults.yml
-            parameters:
-              reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
-              configuration: $(Configuration)
-              condition: succeeded()
-              assemblyfilters: '-xunit'
-              breakBuild: false
+        - template: ../steps/CoverageResults.yml
+          parameters:
+            reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
+            configuration: $(_BuildConfig)
+            condition: succeeded()
+            assemblyfilters: '-xunit'
+            breakBuild: false
 
 - stage: Validate
   displayName: Validate
@@ -160,13 +175,13 @@ stages:
         feedsToUse: config
         nugetConfigPath: 'nuget.config'
 
-    - template: eng/azuredevops/pipelines/templates/CheckNugetStatus.yml
+    - template: eng/azuredevops/pipelines/steps/CheckNugetStatus.yml
       parameters:
         sourcePath: '$(Build.SourcesDirectory)/src'
         nugetConfig: '$(Build.SourcesDirectory)/nuget.config'
         breakBuild: true
 
-    - template: eng/azuredevops/pipelines/templates/GenerateSBOM.yml
+    - template: eng/azuredevops/pipelines/steps/GenerateSBOM.yml
       parameters:
         projects: '$(SolutionPath)'
         outputPath: '$(Build.SourcesDirectory)\artifacts'
