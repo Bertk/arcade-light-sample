@@ -151,7 +151,7 @@ stages:
         - publish: '$(Build.SourcesDirectory)/artifacts/TestResults'
           displayName: 'Publish TestResults Artifacts'
           artifact: TestResults_$(Agent.Os)_$(_BuildConfig)
-          condition: ${{parameters.condition}}
+          condition: succeededOrFailed()
 
 - stage: Validate
   displayName: Validate
