@@ -144,7 +144,7 @@ stages:
           parameters:
             reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
             configuration: $(_BuildConfig)
-            condition: succeeded()
+            condition: and(succeeded(), eq(variables['_BuildConfig'], 'Debug'))
             assemblyfilters: '-xunit'
             breakBuild: false
 
