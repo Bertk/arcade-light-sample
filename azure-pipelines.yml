@@ -64,9 +64,9 @@ stages:
         configuration: $(Configuration)
         projects: |
           **/*.Tests.csproj
-        arguments: '--no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=Coverage/'
+        arguments: '--no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura'
         workingDirectory: '$(Build.SourcesDirectory)'
-        publishTestResults: true
+        publishTestResults: false
 
     - task: PublishBuildArtifacts@1
       enabled: false
