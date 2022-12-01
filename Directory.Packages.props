@@ -62,5 +62,17 @@
     <PackageVersion Include="Microsoft.TemplateEngine.Tasks" Version="7.0.100" />
     <PackageVersion Include="Microsoft.DiaSymReader.PortablePdb" Version="1.6.0" />
 
+
+    <PackageVersion Include="System.ServiceModel.Duplex" Version="4.8.1" />
+    <PackageVersion Include="System.ServiceModel.NetTcp" Version="4.8.1" />
+    <PackageVersion Include="System.ServiceModel.Federation" Version="4.8.1" />
+
+    <PackageVersion Include="CoreWCF.NetTcp" Version="1.1.0" />
+    <PackageVersion Include="CoreWCF.Primitives" Version="1.1.0" />
+    <PackageVersion Include="CoreWCF.ConfigurationManager" Version="1.1.0" />
+    <PackageVersion Include="CoreWCF.Http" Version="1.1.0" />
+    <PackageVersion Include="CoreWCF.WebHttp" Version="1.1.0" />
+    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+
   </ItemGroup>
 </Project>
