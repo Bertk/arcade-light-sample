@@ -31,5 +31,6 @@
     <PackageReference Include="CoreWCF.ConfigurationManager" />
     <PackageReference Include="CoreWCF.Http" />
     <PackageReference Include="CoreWCF.WebHttp" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" />
   </ItemGroup>
 </Project>
