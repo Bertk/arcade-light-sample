@@ -138,7 +138,7 @@ stages:
           condition: succeededOrFailed()
           inputs:
             testRunner: VSTest
-            testResultsFiles: '**/*.trx'
+            testResultsFiles: '$(Build.SourcesDirectory)/artifacts/TestResults/*.trx'
 
         - template: ../steps/CoverageResults.yml
           parameters:
@@ -147,6 +147,11 @@ stages:
             condition: succeeded()
             assemblyfilters: '-xunit'
             breakBuild: false
+
+        - publish: '$(Build.SourcesDirectory)/artifacts/TestResults'
+          displayName: 'Publish TestResults Artifacts'
+          artifact: TestResults_$(Agent.Os)_$(_BuildConfig)
+          condition: ${{parameters.condition}}
 
 - stage: Validate
   displayName: Validate

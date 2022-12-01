@@ -30,5 +30,5 @@ steps:
   condition: ${{parameters.condition}}
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/CoverageReport/Cobertura.xml'
+    summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/CoverageReport/**/Cobertura.xml'
     failIfCoverageEmpty: ${{parameters.breakBuild}}
