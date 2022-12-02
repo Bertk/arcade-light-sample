@@ -67,6 +67,7 @@ stages:
         arguments: '--no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura'
         workingDirectory: '$(Build.SourcesDirectory)'
         publishTestResults: false
+        enabled: false
 
     - task: PublishBuildArtifacts@1
       enabled: false
