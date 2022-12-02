@@ -20,6 +20,11 @@ steps:
     verbosity: 'Verbose'
     assemblyfilters: ${{parameters.assemblyfilters}}
 
+- publish: '$(Build.SourcesDirectory)/artifacts/CoverageReport'
+  displayName: 'Publish CoverageReport Artifact'
+  artifact: CoverageResults_$(Agent.Os)_${{parameters.configuration}}
+  condition: ${{parameters.condition}}
+
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage'
   condition: ${{parameters.condition}}
@@ -28,7 +33,4 @@ steps:
     summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/CoverageReport/Cobertura.xml'
     failIfCoverageEmpty: ${{parameters.breakBuild}}
 
-- publish: '$(Build.SourcesDirectory)/artifacts/CoverageReport'
-  displayName: 'Publish CoverageReport Artifact'
-  artifact: CoverageResults_$(Agent.Os)_${{parameters.configuration}}
-  condition: ${{parameters.condition}}
+
