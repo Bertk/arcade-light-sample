@@ -32,3 +32,5 @@ steps:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/CoverageReport/Cobertura.xml'
     failIfCoverageEmpty: ${{parameters.breakBuild}}
+
+

@@ -138,15 +138,20 @@ stages:
           condition: succeededOrFailed()
           inputs:
             testRunner: VSTest
-            testResultsFiles: '**/*.trx'
+            testResultsFiles: '$(Build.SourcesDirectory)/artifacts/TestResults/**/*.trx'
 
         - template: ../steps/CoverageResults.yml
           parameters:
             reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
             configuration: $(_BuildConfig)
-            condition: succeeded()
+            condition: and(succeeded(), eq(variables['_BuildConfig'], 'Debug'))
             assemblyfilters: '-xunit'
             breakBuild: false
+
+        - publish: '$(Build.SourcesDirectory)/artifacts/TestResults'
+          displayName: 'Publish TestResults Artifacts'
+          artifact: TestResults_$(Agent.Os)_$(_BuildConfig)
+          condition: succeededOrFailed()
 
 - stage: Validate
   displayName: Validate
