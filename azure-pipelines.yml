@@ -138,7 +138,7 @@ stages:
           condition: succeededOrFailed()
           inputs:
             testRunner: VSTest
-            testResultsFiles: '$(Build.SourcesDirectory)/artifacts/TestResults/*.trx'
+            testResultsFiles: '$(Build.SourcesDirectory)/artifacts/TestResults/**/*.trx'
 
         - template: ../steps/CoverageResults.yml
           parameters:
