@@ -20,6 +20,7 @@
     <TargetFrameworkForNETSDK>net6.0</TargetFrameworkForNETSDK>
 
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <NoWarn>$(NoWarn);NU1507</NoWarn>
 
     <XUnitCoreSettingsFile>$(MSBuildThisFileDirectory)eng/xunit.runner.json</XUnitCoreSettingsFile>
   </PropertyGroup>
