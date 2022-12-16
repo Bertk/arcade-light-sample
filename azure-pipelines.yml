@@ -122,6 +122,7 @@ stages:
             projects: 'src/**/*Tests.csproj'
             zipAfterPublish: false
             modifyOutputPath: false
+          enabled: false
         - powershell: eng\commonlight\build.ps1
             -configuration $(_BuildConfig)
             -ci

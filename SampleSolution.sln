@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatorService", "src\Ca
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewTypes", "src\NewTypes\NewTypes.csproj", "{20D24480-4A55-40CC-AD84-71DC4C935FCA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewTypesTests", "src\NewTypesTests\NewTypes.Tests.csproj", "{D843C54F-71BF-4EE6-895A-910BB066951D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewTypes.Tests", "src\NewTypesTests\NewTypes.Tests.csproj", "{D843C54F-71BF-4EE6-895A-910BB066951D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CalculatorSample", "CalculatorSample", "{05EA6E82-061C-410A-84EA-A88B1F6503FF}"
 EndProject
