@@ -25,13 +25,17 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+  
       - name: Setup dotnet 6.0
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
           source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }} 
+          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+
       - name: Setup dotnet 7.0
         uses: actions/setup-dotnet@v3
         with:
@@ -39,8 +43,10 @@ jobs:
           source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }} 
+
       - name: Restore dependencies
         run: dotnet restore
+      
       - name: Build
         run: dotnet build --no-restore
 
@@ -66,6 +72,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
       - name: Setup dotnet 7.0
         uses: actions/setup-dotnet@v3
