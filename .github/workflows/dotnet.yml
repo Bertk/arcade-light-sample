@@ -83,6 +83,14 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }}
 
+      - name: Setup dotnet 6.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+          source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+
       - name: Tests
         run: dotnet test --framework ${{ matrix.framework }} --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
 
