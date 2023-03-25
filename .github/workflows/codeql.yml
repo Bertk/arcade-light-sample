@@ -20,6 +20,9 @@ on:
   schedule:
     - cron: '35 9 * * 3'
 
+env:
+  AZURE_ARTIFACTS_FEED_URL: https://pkgs.dev.azure.com/bertk0374/_packaging/public/nuget/v3/index.json
+
 jobs:
   analyze:
     name: Analyze
@@ -58,20 +61,26 @@ jobs:
         # queries: security-extended,security-and-quality
 
 
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
-
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
 
-    #   If the Autobuild fails above, remove it and uncomment the following three lines.
-    #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
+    - name: Setup dotnet 7.0
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+        source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }}
 
-    # - run: |
-    #     echo "Run, Build Application using script"
-    #     ./location_of_script_within_repo/buildscript.sh
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+     #- run: |
+     #    echo "Run, Build Application using script"
+     #    ./eng/commonlight/build.sh --build --restore
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
