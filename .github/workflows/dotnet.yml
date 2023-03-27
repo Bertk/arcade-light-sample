@@ -90,7 +90,7 @@ jobs:
         uses: danielpalme/ReportGenerator-GitHub-Action@5.1.19
         with:
           reports: ./coverage/**/coverage.cobertura.xml
-          assemblyfilters: -xunit*;-DotNet.ArcadeLight.Test.Common;-DotNet.Internal.DependencyInjection.Testing
+          assemblyfilters: -xunit*
           targetdir: ./artifacts/CoverageReport
           reporttypes: HtmlInline;Cobertura;MarkdownSummaryGithub
 
