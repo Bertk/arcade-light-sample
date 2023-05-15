@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.0.0.68202" />
     <PackageVersion Include="AsyncFixer" Version="1.6.0" />
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.6.128" />
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.6.132" />
   </ItemGroup>
 
   <ItemGroup>
