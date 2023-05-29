@@ -26,10 +26,10 @@
 
   <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" />
-    <PackageReference Include="CoreWCF.NetTcp" />
+    <!--<PackageReference Include="CoreWCF.NetTcp" />
     <PackageReference Include="CoreWCF.Primitives" />
     <PackageReference Include="CoreWCF.ConfigurationManager" />
     <PackageReference Include="CoreWCF.Http" />
-    <PackageReference Include="CoreWCF.WebHttp" />
+    <PackageReference Include="CoreWCF.WebHttp" />-->
   </ItemGroup>
 </Project>
