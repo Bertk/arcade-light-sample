@@ -1,25 +1,36 @@
-using System;
-using McMaster.Extensions.CommandLineUtils;
+using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Parsing;
 
-namespace SampleConsoleApp
+class Program
 {
-    public class Program
+    static async Task Main(string[] args)
     {
-        public static int Main(string[] args)
-            => CommandLineApplication.Execute<Program>(args);
+        var delayOption = new Option<int>("--delay");
+        delayOption.SetDefaultValue(42);
 
-        [Option(Description = "The subject")]
-        public string Subject { get; } = "world";
+        var messageOption = new Option<string>("--message") { IsRequired=true};
 
-        [Option(ShortName = "n")]
-        public int Count { get; } = 1;
+        var rootCommand = new RootCommand("CommandLine example");
+        rootCommand.Add(delayOption);
+        rootCommand.Add(messageOption);
 
-        private void OnExecute()
+        rootCommand.SetHandler((delayOptionValue, messageOptionValue) =>
         {
-            for (var i = 0; i < Count; i++)
-            {
-                Console.WriteLine($"Hello {Subject}!");
-            }
-        }
+            DoRootCommand(delayOptionValue, messageOptionValue);
+        },
+            delayOption, messageOption);
+
+        var commandLineBuilder = new CommandLineBuilder(rootCommand);
+
+        commandLineBuilder.UseDefaults();
+        var parser = commandLineBuilder.Build();
+        await parser.InvokeAsync(args).ConfigureAwait(false);
+    }
+
+    public static void DoRootCommand(int delay, string message)
+    {
+        Console.WriteLine($"--delay = {delay}");
+        Console.WriteLine($"--message = {message}");
     }
 }

@@ -10,11 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="SampleConsoleAppTest"/>
+    <InternalsVisibleTo Include="SampleConsoleAppTest" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="McMaster.Extensions.Hosting.CommandLine" />
+    <PackageReference Include="System.CommandLine" />
+    <PackageReference Include="System.CommandLine.Hosting" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 using System;
+using System.CommandLine;
+using System.CommandLine.IO;
 using System.IO;
-using McMaster.Extensions.CommandLineUtils;
 using Xunit.Abstractions;
 
 namespace SampleConsoleAppTest.CommandLine.Tests.Utils
@@ -27,6 +28,10 @@ namespace SampleConsoleAppTest.CommandLine.Tests.Utils
 
         public ConsoleColor ForegroundColor { get; set; }
         public ConsoleColor BackgroundColor { get; set; }
+
+        IStandardStreamWriter IStandardOut.Out => throw new NotImplementedException();
+
+        IStandardStreamWriter IStandardError.Error => throw new NotImplementedException();
 
         public event ConsoleCancelEventHandler? CancelKeyPress
         {
