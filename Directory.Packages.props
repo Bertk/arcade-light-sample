@@ -4,7 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.1.0.70676" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="9.2.0.71021" />
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.6.133" />
   </ItemGroup>
 
