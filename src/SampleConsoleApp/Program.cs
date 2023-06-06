@@ -2,35 +2,38 @@ using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Parsing;
 
-class Program
+namespace SampleConsoleApp
 {
-    static async Task Main(string[] args)
+    static class Program
     {
-        var delayOption = new Option<int>("--delay");
-        delayOption.SetDefaultValue(42);
-
-        var messageOption = new Option<string>("--message") { IsRequired=true};
-
-        var rootCommand = new RootCommand("CommandLine example");
-        rootCommand.Add(delayOption);
-        rootCommand.Add(messageOption);
-
-        rootCommand.SetHandler((delayOptionValue, messageOptionValue) =>
+        static async Task Main(string[] args)
         {
-            DoRootCommand(delayOptionValue, messageOptionValue);
-        },
-            delayOption, messageOption);
+            var delayOption = new Option<int>("--delay");
+            delayOption.SetDefaultValue(42);
 
-        var commandLineBuilder = new CommandLineBuilder(rootCommand);
+            var messageOption = new Option<string>("--message") { IsRequired = true };
 
-        commandLineBuilder.UseDefaults();
-        var parser = commandLineBuilder.Build();
-        await parser.InvokeAsync(args).ConfigureAwait(false);
-    }
+            var rootCommand = new RootCommand("CommandLine example");
+            rootCommand.Add(delayOption);
+            rootCommand.Add(messageOption);
 
-    public static void DoRootCommand(int delay, string message)
-    {
-        Console.WriteLine($"--delay = {delay}");
-        Console.WriteLine($"--message = {message}");
+            rootCommand.SetHandler((delayOptionValue, messageOptionValue) =>
+            {
+                DoRootCommand(delayOptionValue, messageOptionValue);
+            },
+                delayOption, messageOption);
+
+            var commandLineBuilder = new CommandLineBuilder(rootCommand);
+
+            commandLineBuilder.UseDefaults();
+            var parser = commandLineBuilder.Build();
+            await parser.InvokeAsync(args).ConfigureAwait(false);
+        }
+
+        public static void DoRootCommand(int delay, string message)
+        {
+            Console.WriteLine($"--delay = {delay}");
+            Console.WriteLine($"--message = {message}");
+        }
     }
 }

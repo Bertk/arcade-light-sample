@@ -1,4 +1,4 @@
-﻿//  Copyright (c) Microsoft Corporation.  All Rights Reserved.
+//  Copyright (c) Microsoft Corporation.  All Rights Reserved.
 
 using System;
 using System.ServiceModel;
@@ -10,7 +10,7 @@ namespace CalculatorSample
         static void Main()
         {
             // Create a client
-            var channelFactory = new ChannelFactory<ICalculator>(new NetTcpBinding(), new EndpointAddress("net.tcp://localhost:8090/CalculatorSample/service"));
+            using var channelFactory = new ChannelFactory<ICalculator>(new NetTcpBinding(), new EndpointAddress("net.tcp://localhost:8090/CalculatorSample/service"));
 
             // Call the Add/Subtract/Multiply/Divide service operation.
             var proxy = channelFactory.CreateChannel();
