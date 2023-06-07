@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/NewTypes/NewTypes.csproj"/>
+    <ProjectReference Include="../NewTypes/NewTypes.csproj"/>
   </ItemGroup>
 
 </Project>

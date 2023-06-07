@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <NoWarn>$(NoWarn);CA1303</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Grpc.Net.Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Calculator.SharedLib\Calculator.SharedLib.csproj" />
+    </ItemGroup>
+</Project>
