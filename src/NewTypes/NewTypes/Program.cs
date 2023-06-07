@@ -1,10 +1,9 @@
-﻿using System;
-using Pets;
+using System;
 using System.Collections.Generic;
 
-namespace ConsoleApplication
+namespace Pets
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
