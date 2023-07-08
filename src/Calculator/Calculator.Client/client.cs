@@ -1,14 +1,14 @@
-using Grpc.Net.Client;
-using Calculator.SharedLib.Generated;
 using System;
 using System.Threading.Tasks;
+using Calculator.SharedLib.Generated;
+using Grpc.Net.Client;
 
 // error message:  AuthenticationException: The remote certificate is invalid because of errors in the certificate chain: UntrustedRoot
 // use command: `dotnet dev-certs https --trust` 
 
 namespace CalculatorClient
 {
-    class Program
+    static class Program
     {
         static async Task Main(string[] args)
         {
