@@ -61,7 +61,6 @@ namespace SampleConsoleAppTest.CommandLine.Tests
 
         static internal string GetCommandPath()
         {
-            Assembly TestAssembly = typeof(CommandLineTest).Assembly;
             string currentPath = Assembly.GetExecutingAssembly().Location;
             string rootDirectory = currentPath.Substring(0, currentPath.IndexOf("\\bin\\", StringComparison.CurrentCulture));
             string ToolCommandPath = string.Concat(rootDirectory, "\\bin\\SampleConsoleApp\\Debug\\net6.0\\SampleConsoleApp.exe");
