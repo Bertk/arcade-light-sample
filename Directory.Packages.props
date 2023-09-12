@@ -48,7 +48,7 @@
     <PackageVersion Include="System.ServiceModel.NetTcp" Version="6.0.0" />
     <PackageVersion Include="System.ServiceModel.Federation" Version="6.0.0" />
     <PackageVersion Include="CoreWCF.NetTcp" Version="1.3.2" />
-    <PackageVersion Include="CoreWCF.Primitives" Version="1.3.2" />
+    <PackageVersion Include="CoreWCF.Primitives" Version="1.4.1" />
     <PackageVersion Include="CoreWCF.ConfigurationManager" Version="1.3.2" />
     <PackageVersion Include="CoreWCF.Http" Version="1.4.1" />
     <PackageVersion Include="CoreWCF.WebHttp" Version="1.4.1" />
