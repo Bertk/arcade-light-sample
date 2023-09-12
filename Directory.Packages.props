@@ -8,10 +8,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.24.2" />
-    <PackageVersion Include="Grpc.AspNetCore" Version="2.56.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.24.3" />
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.57.0" />
     <PackageVersion Include="Grpc.Net.Client" Version="2.57.0" />
-    <PackageVersion Include="Grpc.Tools" Version="2.57.0" />
+    <PackageVersion Include="Grpc.Tools" Version="2.58.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageVersion Include="Microsoft.NETCore.Platforms" Version="7.0.4" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
@@ -48,7 +48,7 @@
     <PackageVersion Include="System.ServiceModel.NetTcp" Version="6.0.0" />
     <PackageVersion Include="System.ServiceModel.Federation" Version="6.0.0" />
     <PackageVersion Include="CoreWCF.NetTcp" Version="1.4.1" />
-    <PackageVersion Include="CoreWCF.Primitives" Version="1.3.2" />
+    <PackageVersion Include="CoreWCF.Primitives" Version="1.4.1" />
     <PackageVersion Include="CoreWCF.ConfigurationManager" Version="1.3.2" />
     <PackageVersion Include="CoreWCF.Http" Version="1.4.1" />
     <PackageVersion Include="CoreWCF.WebHttp" Version="1.4.1" />
