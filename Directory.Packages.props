@@ -25,7 +25,7 @@
     <PackageVersion Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NuGet.Frameworks" Version="6.7.0" />
-    <PackageVersion Include="xunit" Version="2.5.1" />
+    <PackageVersion Include="xunit" Version="2.5.2" />
     <PackageVersion Include="xunit.runner.console" Version="2.5.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />
