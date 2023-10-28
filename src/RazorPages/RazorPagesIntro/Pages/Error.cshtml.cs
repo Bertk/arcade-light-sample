@@ -12,7 +12,9 @@ namespace RazorPagesIntro.Pages
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
+#pragma warning disable S4487 // Unread "private" fields should be removed
         private readonly ILogger<ErrorModel> _logger;
+#pragma warning restore S4487 // Unread "private" fields should be removed
 
         public ErrorModel(ILogger<ErrorModel> logger)
         {

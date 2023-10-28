@@ -7,6 +7,7 @@ namespace RazorPagesTestSample.Pages
     {
         public void OnGet()
         {
+            // to be populated
         }
 
         public IActionResult OnGetPartial() => Partial("_Partial");

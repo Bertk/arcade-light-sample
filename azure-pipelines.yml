@@ -142,7 +142,7 @@ stages:
 
         - template: ../steps/CoverageResults.yml
           parameters:
-            reports: $(Build.SourcesDirectory)/artifacts/TestResults/**/coverage.cobertura.xml
+            reports: $(Build.SourcesDirectory)/**/coverage.cobertura.xml
             configuration: $(_BuildConfig)
             condition: and(succeeded(), eq(variables['_BuildConfig'], 'Debug'))
             assemblyfilters: '-xunit'
