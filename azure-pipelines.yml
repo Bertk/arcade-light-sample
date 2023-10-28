@@ -13,8 +13,6 @@ variables:
   value: 'SampleSolution.sln'
 - name: DOTNET_ROLL_FORWARD
   value: 'Major'
-- name: disable.coverage.autogenerate
-  value: 'false'
 
 # Only run against main
 trigger:
@@ -143,7 +141,6 @@ stages:
         - template: ../steps/CoverageResults.yml
           parameters:
             reports: $(Build.SourcesDirectory)/**/coverage.cobertura.xml
-            configuration: $(_BuildConfig)
             condition: and(succeeded(), eq(variables['_BuildConfig'], 'Debug'))
             assemblyfilters: '-xunit'
             breakBuild: false
