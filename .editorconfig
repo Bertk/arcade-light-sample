@@ -93,6 +93,7 @@ dotnet_naming_symbols.constant_fields.required_modifiers          = const
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 2
 end_of_line = crlf
+dotnet_diagnostic.CA2007.severity = suggestion
 ###############################
 # C# Coding Conventions       #
 ###############################
@@ -960,6 +961,7 @@ csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
+csharp_style_prefer_primary_constructors = true:suggestion
 
 
 [*.vb]

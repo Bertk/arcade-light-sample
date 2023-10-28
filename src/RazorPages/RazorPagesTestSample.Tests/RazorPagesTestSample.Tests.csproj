@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <NoWarn>$(NoWarn);NU1504;NU1507;CS1591</NoWarn>
+        <EnableSourceLink>false</EnableSourceLink>
+        <!--coverlet workaround -->
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <VSTestRunSettingsFile>$(MSBuildThisFileDirectory)coverlet.runsettings</VSTestRunSettingsFile>
+    </PropertyGroup>
+
+    <!-- https://github.com/NuGet/Home/issues/4412 -->
+    <Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+        <ItemGroup>
+            <DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
+        </ItemGroup>
+
+        <Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
+    </Target>
+
+    <ItemGroup>
+        <ProjectReference Include="..\RazorPagesTestSample\RazorPagesTestSample.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.TestHost" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="System.Diagnostics.TraceSource" />
+        <PackageReference Include="System.Net.Http" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="xunit.runner.console">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>
