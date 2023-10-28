@@ -95,9 +95,8 @@ stages:
           matrix:
             Build_Release:
               _BuildConfig: Release
-            ${{ if eq(variables._RunAsPublic, True) }}:
-              Build_Debug:
-                _BuildConfig: Debug
+            Build_Debug:
+              _BuildConfig: Debug
         preSteps:
         - checkout: self
           fetchDepth: 0
