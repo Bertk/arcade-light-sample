@@ -1,6 +1,6 @@
 using System;
-using Xunit;
 using Pets;
+using Xunit;
 
 namespace PetsUnitTest
 {
