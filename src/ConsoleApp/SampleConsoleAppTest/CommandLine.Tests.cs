@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Xunit;
 using Xunit.Sdk;
@@ -12,7 +13,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
             Debug.WriteLine($"BaseTest.RunCommand: {command} {arguments}\nWorkingDirectory: {workingDirectory}");
-            using Process commandProcess = new() ;
+            using Process commandProcess = new();
             commandProcess.StartInfo.FileName = command;
             commandProcess.StartInfo.Arguments = arguments;
             commandProcess.StartInfo.WorkingDirectory = workingDirectory;
@@ -69,7 +70,13 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         {
             string currentPath = Assembly.GetExecutingAssembly().Location;
             string rootDirectory = currentPath.Substring(0, currentPath.IndexOf("\\bin\\", StringComparison.CurrentCulture));
-            string ToolCommandPath = string.Concat(rootDirectory, "\\bin\\SampleConsoleApp\\Debug\\net6.0\\SampleConsoleApp.exe");
+#if NET8_0
+            string targetFramework = "net8.0";
+#endif
+#if NET7_0
+            string targetFramework = "net7.0";
+#endif
+            string ToolCommandPath = string.Concat(rootDirectory, $"\\bin\\SampleConsoleApp\\Debug\\{targetFramework}\\SampleConsoleApp.exe");
             return ToolCommandPath;
         }
     }
