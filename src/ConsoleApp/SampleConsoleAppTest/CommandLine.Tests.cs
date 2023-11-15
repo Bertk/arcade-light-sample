@@ -12,17 +12,23 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
             Debug.WriteLine($"BaseTest.RunCommand: {command} {arguments}\nWorkingDirectory: {workingDirectory}");
-            ProcessStartInfo psi = new ProcessStartInfo(command, arguments);
-            psi.WorkingDirectory = workingDirectory;
-            psi.RedirectStandardError = true;
-            psi.RedirectStandardOutput = true;
-            Process commandProcess = Process.Start(psi)!;
+            using Process commandProcess = new() ;
+            commandProcess.StartInfo.FileName = command;
+            commandProcess.StartInfo.Arguments = arguments;
+            commandProcess.StartInfo.WorkingDirectory = workingDirectory;
+            commandProcess.StartInfo.RedirectStandardError = true;
+            commandProcess.StartInfo.RedirectStandardOutput = true;
+            string eOut = "";
+            commandProcess.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => { eOut += e.Data; });
+            commandProcess.Start();
+            // To avoid deadlocks, use an asynchronous read operation on at least one of the streams.
+            commandProcess.BeginErrorReadLine();
             if (!commandProcess.WaitForExit((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
             {
                 throw new XunitException($"Command '{command} {arguments}' didn't end after 5 minute");
             }
             standardOutput = commandProcess.StandardOutput.ReadToEnd();
-            standardError = commandProcess.StandardError.ReadToEnd();
+            standardError = eOut;
             return commandProcess.ExitCode == 0;
         }
 
