@@ -114,7 +114,7 @@ stages:
           displayName: Publish test project
           inputs:
             command: 'publish'
-            arguments: '-f net6.0 --configuration $(_BuildConfig)'
+            arguments: '-f net8.0 --configuration $(_BuildConfig)'
             publishWebProjects: false
             projects: 'src/**/*Tests.csproj'
             zipAfterPublish: false
@@ -144,6 +144,16 @@ stages:
             condition: and(succeeded(), eq(variables['_BuildConfig'], 'Debug'))
             assemblyfilters: '-xunit'
             breakBuild: false
+
+        - task: CopyFiles@2
+          displayName: Copy log files
+          condition: always()
+          inputs:
+            SourceFolder: '$(Build.SourcesDirectory)'
+            Contents: |
+                **/*.log
+                **/*.binlog
+            TargetFolder: '$(Build.SourcesDirectory)/artifacts/logs'
 
         - publish: '$(Build.SourcesDirectory)/artifacts/TestResults'
           displayName: 'Publish TestResults Artifacts'

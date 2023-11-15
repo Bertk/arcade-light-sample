@@ -8,15 +8,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.1-preview.21.g91acb45884" />
-    <PackageVersion Include="Google.Protobuf" Version="3.24.4" />
-    <PackageVersion Include="Grpc.AspNetCore" Version="2.58.0" />
-    <PackageVersion Include="Grpc.Net.Client" Version="2.58.0" />
+    <PackageVersion Include="Google.Protobuf" Version="3.25.0" />
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.59.0" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.59.0" />
     <PackageVersion Include="Grpc.Tools" Version="2.59.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="6.0.24" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageVersion Include="Microsoft.NETCore.Platforms" Version="7.0.4" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="6.0.24" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.24" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
@@ -29,7 +29,7 @@
     <PackageVersion Include="Moq" Version="4.20.69" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NuGet.Frameworks" Version="6.7.0" />
-    <PackageVersion Include="xunit" Version="2.6.0" />
+    <PackageVersion Include="xunit" Version="2.6.1" />
     <PackageVersion Include="xunit.runner.console" Version="2.6.1" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
     <PackageVersion Include="System.Net.Http" Version="4.3.4" />

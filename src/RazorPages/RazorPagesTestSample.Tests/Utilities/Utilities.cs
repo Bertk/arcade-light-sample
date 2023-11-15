@@ -9,20 +9,20 @@ using RazorPagesTestSample.Data;
 
 namespace RazorPagesTestSample.Tests
 {
-    public static class Utilities
+    public static class TestUtilities
     {
         #region snippet1
         public static DbContextOptions<AppDbContext> TestDbContextOptions()
         {
             // Create a new service provider to create a new in-memory database.
-            var serviceProvider = new ServiceCollection()
+            ServiceProvider serviceProvider = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase()
                 .BuildServiceProvider();
 
             // Create a new options instance using an in-memory database and 
             // IServiceProvider that the context should resolve all of its 
             // services from.
-            var builder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> builder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb")
                 .UseInternalServiceProvider(serviceProvider);
 

@@ -16,26 +16,30 @@ namespace RazorPagesTestSample
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            IHost host = CreateHostBuilder(args).Build();
 
-            using (var scope = host.Services.CreateScope())
+            using (IServiceScope scope = host.Services.CreateScope())
             {
-                var services = scope.ServiceProvider;
-                var db = services.GetRequiredService<AppDbContext>();
+                IServiceProvider services = scope.ServiceProvider;
+                AppDbContext db = services.GetRequiredService<AppDbContext>();
 
                 db.Database.EnsureCreated();
 
                 if (!db.Messages.Any())
                 {
+#pragma warning disable CA1031 // Do not catch general exception types
                     try
                     {
                         db.Initialize();
                     }
                     catch (Exception ex)
                     {
-                        var logger = services.GetRequiredService<ILogger<Program>>();
+                        ILogger<Program> logger = services.GetRequiredService<ILogger<Program>>();
+#pragma warning disable CA1848 // Use the LoggerMessage delegates
                         logger.LogError(ex, "An error occurred seeding the database. Error: {Message}", ex.Message);
+#pragma warning restore CA1848 // Use the LoggerMessage delegates
                     }
+#pragma warning restore CA1031 // Do not catch general exception types
                 }
             }
 

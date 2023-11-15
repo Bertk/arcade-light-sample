@@ -13,7 +13,7 @@ namespace Pets
                 new Cat()
             };
 
-            foreach (var pet in pets)
+            foreach (IPet pet in pets)
             {
                 Console.WriteLine(pet.TalkToOwner());
             }

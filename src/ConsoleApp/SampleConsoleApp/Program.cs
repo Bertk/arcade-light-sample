@@ -8,12 +8,12 @@ namespace SampleConsoleApp
     {
         static async Task Main(string[] args)
         {
-            var delayOption = new Option<int>("--delay");
+            Option<int> delayOption = new Option<int>("--delay");
             delayOption.SetDefaultValue(42);
 
-            var messageOption = new Option<string>("--message") { IsRequired = true };
+            Option<string> messageOption = new Option<string>("--message") { IsRequired = true };
 
-            var rootCommand = new RootCommand("CommandLine example");
+            RootCommand rootCommand = new RootCommand("CommandLine example");
             rootCommand.Add(delayOption);
             rootCommand.Add(messageOption);
 
@@ -23,10 +23,10 @@ namespace SampleConsoleApp
             },
                 delayOption, messageOption);
 
-            var commandLineBuilder = new CommandLineBuilder(rootCommand);
+            CommandLineBuilder commandLineBuilder = new CommandLineBuilder(rootCommand);
 
             commandLineBuilder.UseDefaults();
-            var parser = commandLineBuilder.Build();
+            Parser parser = commandLineBuilder.Build();
             await parser.InvokeAsync(args).ConfigureAwait(false);
         }
 
