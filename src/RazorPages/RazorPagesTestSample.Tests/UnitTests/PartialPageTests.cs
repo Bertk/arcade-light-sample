@@ -17,17 +17,17 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public void OnGetPartial_ReturnsAPartialViewResult()
         {
             // Arrange
-            var httpContext = new DefaultHttpContext();
-            var modelState = new ModelStateDictionary();
-            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
-            var modelMetadataProvider = new EmptyModelMetadataProvider();
-            var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var pageContext = new PageContext(actionContext)
+            DefaultHttpContext httpContext = new();
+            ModelStateDictionary modelState = new();
+            ActionContext actionContext = new(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            EmptyModelMetadataProvider modelMetadataProvider = new();
+            ViewDataDictionary viewData = new(modelMetadataProvider, modelState);
+            TempDataDictionary tempData = new(httpContext, Mock.Of<ITempDataProvider>());
+            PageContext pageContext = new(actionContext)
             {
                 ViewData = viewData
             };
-            var pageModel = new PartialsModel()
+            PartialsModel pageModel = new()
             {
                 PageContext = pageContext,
                 TempData = tempData,
@@ -36,7 +36,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
             };
 
             // Act
-            var result = pageModel.OnGetPartial();
+            IActionResult result = pageModel.OnGetPartial();
 
             // Assert
             Assert.IsType<PartialViewResult>(result);

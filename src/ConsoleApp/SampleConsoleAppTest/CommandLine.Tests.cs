@@ -12,7 +12,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
             Debug.WriteLine($"BaseTest.RunCommand: {command} {arguments}\nWorkingDirectory: {workingDirectory}");
-            var psi = new ProcessStartInfo(command, arguments);
+            ProcessStartInfo psi = new ProcessStartInfo(command, arguments);
             psi.WorkingDirectory = workingDirectory;
             psi.RedirectStandardError = true;
             psi.RedirectStandardOutput = true;
@@ -59,7 +59,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             Assert.Contains("Unrecognized command or argument '--missing'.", standardError, StringComparison.CurrentCulture);
         }
 
-        static internal string GetCommandPath()
+        internal static string GetCommandPath()
         {
             string currentPath = Assembly.GetExecutingAssembly().Location;
             string rootDirectory = currentPath.Substring(0, currentPath.IndexOf("\\bin\\", StringComparison.CurrentCulture));

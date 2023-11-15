@@ -23,14 +23,14 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public async Task OnGetAsync_PopulatesThePageModel_WithAListOfMessages()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
             #region snippet1
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var expectedMessages = AppDbContext.GetSeedingMessages();
+            Mock<AppDbContext> mockAppDbContext = new(optionsBuilder.Options);
+            List<Message> expectedMessages = AppDbContext.GetSeedingMessages();
             mockAppDbContext.Setup(
                 db => db.GetMessagesAsync()).Returns(Task.FromResult(expectedMessages));
-            var pageModel = new IndexModel(mockAppDbContext.Object);
+            IndexModel pageModel = new(mockAppDbContext.Object);
             #endregion
 
             #region snippet2
@@ -40,7 +40,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
 
             #region snippet3
             // Assert
-            var actualMessages = Assert.IsAssignableFrom<List<Message>>(pageModel.Messages);
+            List<Message> actualMessages = Assert.IsAssignableFrom<List<Message>>(pageModel.Messages);
             Assert.Equal(
                 expectedMessages.OrderBy(m => m.Id).Select(m => m.Text),
                 actualMessages.OrderBy(m => m.Id).Select(m => m.Text));
@@ -52,22 +52,22 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public async Task OnPostAddMessageAsync_ReturnsAPageResult_WhenModelStateIsInvalid()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var expectedMessages = AppDbContext.GetSeedingMessages();
+            Mock<AppDbContext> mockAppDbContext = new(optionsBuilder.Options);
+            List<Message> expectedMessages = AppDbContext.GetSeedingMessages();
             mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(expectedMessages));
-            var httpContext = new DefaultHttpContext();
-            var modelState = new ModelStateDictionary();
-            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
-            var modelMetadataProvider = new EmptyModelMetadataProvider();
-            var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var pageContext = new PageContext(actionContext)
+            DefaultHttpContext httpContext = new();
+            ModelStateDictionary modelState = new();
+            ActionContext actionContext = new(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            EmptyModelMetadataProvider modelMetadataProvider = new();
+            ViewDataDictionary viewData = new(modelMetadataProvider, modelState);
+            TempDataDictionary tempData = new(httpContext, Mock.Of<ITempDataProvider>());
+            PageContext pageContext = new(actionContext)
             {
                 ViewData = viewData
             };
-            var pageModel = new IndexModel(mockAppDbContext.Object)
+            IndexModel pageModel = new(mockAppDbContext.Object)
             {
                 PageContext = pageContext,
                 TempData = tempData,
@@ -76,7 +76,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
             pageModel.ModelState.AddModelError("Message.Text", "The Text field is required.");
 
             // Act
-            var result = await pageModel.OnPostAddMessageAsync();
+            IActionResult result = await pageModel.OnPostAddMessageAsync();
 
             // Assert
             Assert.IsType<PageResult>(result);
@@ -87,22 +87,22 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public async Task OnPostAddMessageAsync_ReturnsARedirectToPageResult_WhenModelStateIsValid()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var expectedMessages = AppDbContext.GetSeedingMessages();
+            Mock<AppDbContext> mockAppDbContext = new(optionsBuilder.Options);
+            List<Message> expectedMessages = AppDbContext.GetSeedingMessages();
             mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(expectedMessages));
-            var httpContext = new DefaultHttpContext();
-            var modelState = new ModelStateDictionary();
-            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
-            var modelMetadataProvider = new EmptyModelMetadataProvider();
-            var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var pageContext = new PageContext(actionContext)
+            DefaultHttpContext httpContext = new();
+            ModelStateDictionary modelState = new();
+            ActionContext actionContext = new(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            EmptyModelMetadataProvider modelMetadataProvider = new();
+            ViewDataDictionary viewData = new(modelMetadataProvider, modelState);
+            TempDataDictionary tempData = new(httpContext, Mock.Of<ITempDataProvider>());
+            PageContext pageContext = new(actionContext)
             {
                 ViewData = viewData
             };
-            var pageModel = new IndexModel(mockAppDbContext.Object)
+            IndexModel pageModel = new(mockAppDbContext.Object)
             {
                 PageContext = pageContext,
                 TempData = tempData,
@@ -111,7 +111,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
 
             // Act
             // A new ModelStateDictionary is valid by default.
-            var result = await pageModel.OnPostAddMessageAsync();
+            IActionResult result = await pageModel.OnPostAddMessageAsync();
 
             // Assert
             Assert.IsType<RedirectToPageResult>(result);
@@ -121,13 +121,13 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public async Task OnPostDeleteAllMessagesAsync_ReturnsARedirectToPageResult()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var pageModel = new IndexModel(mockAppDbContext.Object);
+            Mock<AppDbContext> mockAppDbContext = new(optionsBuilder.Options);
+            IndexModel pageModel = new(mockAppDbContext.Object);
 
             // Act
-            var result = await pageModel.OnPostDeleteAllMessagesAsync();
+            IActionResult result = await pageModel.OnPostDeleteAllMessagesAsync();
 
             // Assert
             Assert.IsType<RedirectToPageResult>(result);
@@ -137,14 +137,14 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public async Task OnPostDeleteMessageAsync_ReturnsARedirectToPageResult()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var pageModel = new IndexModel(mockAppDbContext.Object);
-            var recId = 1;
+            Mock<AppDbContext> mockAppDbContext = new(optionsBuilder.Options);
+            IndexModel pageModel = new(mockAppDbContext.Object);
+            int recId = 1;
 
             // Act
-            var result = await pageModel.OnPostDeleteMessageAsync(recId);
+            IActionResult result = await pageModel.OnPostDeleteMessageAsync(recId);
 
             // Assert
             Assert.IsType<RedirectToPageResult>(result);
@@ -154,24 +154,24 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public async Task OnPostAnalyzeMessagesAsync_ReturnsARedirectToPageResultWithCorrectAnalysis_WhenMessagesArePresent()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
-            var seedMessages = AppDbContext.GetSeedingMessages();
+            Mock<AppDbContext> mockAppDbContext = new(optionsBuilder.Options);
+            List<Message> seedMessages = AppDbContext.GetSeedingMessages();
             mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(seedMessages));
-            var pageModel = new IndexModel(mockAppDbContext.Object);
-            var wordCount = 0;
+            IndexModel pageModel = new(mockAppDbContext.Object);
+            int wordCount = 0;
 
-            foreach (var message in seedMessages)
+            foreach (Message message in seedMessages)
             {
                 wordCount += message.Text.Split(' ').Length;
             }
 
-            var avgWordCount = Decimal.Divide(wordCount, seedMessages.Count);
-            var expectedMessageAnalysisResultString = $"The average message length is {avgWordCount:0.##} words.";
+            decimal avgWordCount = Decimal.Divide(wordCount, seedMessages.Count);
+            string expectedMessageAnalysisResultString = $"The average message length is {avgWordCount:0.##} words.";
 
             // Act
-            var result = await pageModel.OnPostAnalyzeMessagesAsync();
+            IActionResult result = await pageModel.OnPostAnalyzeMessagesAsync();
 
             // Assert
             Assert.IsType<RedirectToPageResult>(result);
@@ -182,15 +182,15 @@ namespace RazorPagesTestSample.Tests.UnitTests
         public async Task OnPostAnalyzeMessagesAsync_ReturnsARedirectToPageResultWithCorrectAnalysis_WhenNoMessagesArePresent()
         {
             // Arrange
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+            DbContextOptionsBuilder<AppDbContext> optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase("InMemoryDb");
-            var mockAppDbContext = new Mock<AppDbContext>(optionsBuilder.Options);
+            Mock<AppDbContext> mockAppDbContext = new(optionsBuilder.Options);
             mockAppDbContext.Setup(db => db.GetMessagesAsync()).Returns(Task.FromResult(new List<Message>()));
-            var pageModel = new IndexModel(mockAppDbContext.Object);
-            var expectedMessageAnalysisResultString = "There are no messages to analyze.";
+            IndexModel pageModel = new(mockAppDbContext.Object);
+            string expectedMessageAnalysisResultString = "There are no messages to analyze.";
 
             // Act
-            var result = await pageModel.OnPostAnalyzeMessagesAsync();
+            IActionResult result = await pageModel.OnPostAnalyzeMessagesAsync();
 
             // Assert
             Assert.IsType<RedirectToPageResult>(result);

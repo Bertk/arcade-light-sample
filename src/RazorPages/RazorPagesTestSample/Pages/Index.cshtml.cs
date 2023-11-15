@@ -27,7 +27,7 @@ namespace RazorPagesTestSample.Pages
         #region snippet1
         public async Task OnGetAsync()
         {
-            Messages = await _db.GetMessagesAsync();
+            Messages = await _db.GetMessagesAsync().ConfigureAwait(false);
         }
         #endregion
 
@@ -35,33 +35,33 @@ namespace RazorPagesTestSample.Pages
         {
             if (!ModelState.IsValid)
             {
-                Messages = await _db.GetMessagesAsync();
+                Messages = await _db.GetMessagesAsync().ConfigureAwait(false);
 
                 return Page();
             }
 
-            await _db.AddMessageAsync(Message);
+            await _db.AddMessageAsync(Message).ConfigureAwait(false);
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteAllMessagesAsync()
         {
-            await _db.DeleteAllMessagesAsync();
+            await _db.DeleteAllMessagesAsync().ConfigureAwait(false);
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostDeleteMessageAsync(int id)
         {
-            await _db.DeleteMessageAsync(id);
+            await _db.DeleteMessageAsync(id).ConfigureAwait(false);
 
             return RedirectToPage();
         }
 
         public async Task<IActionResult> OnPostAnalyzeMessagesAsync()
         {
-            Messages = await _db.GetMessagesAsync();
+            Messages = await _db.GetMessagesAsync().ConfigureAwait(false);
 
             if (Messages.Count == 0)
             {
@@ -69,14 +69,14 @@ namespace RazorPagesTestSample.Pages
             }
             else
             {
-                var wordCount = 0;
+                int wordCount = 0;
 
-                foreach (var message in Messages)
+                foreach (Message message in Messages)
                 {
                     wordCount += message.Text.Split(' ').Length;
                 }
 
-                var avgWordCount = Decimal.Divide(wordCount, Messages.Count);
+                decimal avgWordCount = Decimal.Divide(wordCount, Messages.Count);
                 MessageAnalysisResult = $"The average message length is {avgWordCount:0.##} words.";
             }
 
