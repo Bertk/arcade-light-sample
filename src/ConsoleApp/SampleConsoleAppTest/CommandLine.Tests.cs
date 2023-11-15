@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Xunit;
@@ -42,6 +43,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         public void commandHelpTest()
         {
             string ToolCommandPath = GetCommandPath();
+            Assert.True(File.Exists(ToolCommandPath));
             CommandLineTest.RunCommand(ToolCommandPath, $"-h", out string standardOutput, out string standardError);
             if (!string.IsNullOrEmpty(standardError))
             {
@@ -54,6 +56,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         public void commandMessageRequiredTest()
         {
             string ToolCommandPath = GetCommandPath();
+            Assert.True(File.Exists(ToolCommandPath));
             CommandLineTest.RunCommand(ToolCommandPath, $"", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
             Assert.Contains("Option '--message' is required.", standardError, StringComparison.CurrentCulture);
@@ -62,6 +65,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         public void commandWrongOptionTest()
         {
             string ToolCommandPath = GetCommandPath();
+            Assert.True(File.Exists(ToolCommandPath));
             RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
             Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
