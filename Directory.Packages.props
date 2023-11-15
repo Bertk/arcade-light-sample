@@ -21,7 +21,7 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="8.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
@@ -50,7 +50,7 @@
     <PackageVersion Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
     <PackageVersion Include="System.ServiceModel.Duplex" Version="6.0.0" />
-    <PackageVersion Include="System.ServiceModel.NetTcp" Version="6.1.0" />
+    <PackageVersion Include="System.ServiceModel.NetTcp" Version="6.2.0" />
     <PackageVersion Include="System.ServiceModel.Federation" Version="6.2.0" />
     <PackageVersion Include="CoreWCF.NetTcp" Version="1.5.1" />
     <PackageVersion Include="CoreWCF.Primitives" Version="1.5.1" />
