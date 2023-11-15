@@ -1,10 +1,10 @@
 {
   "sdk": {
-    "version": "7.0.403",
+    "version": "8.0.100",
     "rollForward": "latestFeature"
   },
   "tools": {
-    "dotnet": "7.0.403"
+    "dotnet": "8.0.100"
   },
   "msbuild-sdks": {
     "DotNetDev.ArcadeLight.Sdk": "1.6.5"
