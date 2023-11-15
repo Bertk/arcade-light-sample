@@ -3,13 +3,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace SampleConsoleAppTest.CommandLine.Tests
 {
     public class CommandLineTest
     {
-
+        private readonly ITestOutputHelper _output;
+        public CommandLineTest(ITestOutputHelper output)
+        {
+            _output = output;
+        }
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
             Debug.WriteLine($"BaseTest.RunCommand: {command} {arguments}\nWorkingDirectory: {workingDirectory}");
@@ -38,6 +43,10 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         {
             string ToolCommandPath = GetCommandPath();
             CommandLineTest.RunCommand(ToolCommandPath, $"-h", out string standardOutput, out string standardError);
+            if (!string.IsNullOrEmpty(standardError))
+            {
+                _output.WriteLine(standardError);
+            }
             Assert.Contains("CommandLine example", standardOutput, StringComparison.CurrentCulture);
         }
 
@@ -46,24 +55,16 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         {
             string ToolCommandPath = GetCommandPath();
             CommandLineTest.RunCommand(ToolCommandPath, $"", out string standardOutput, out string standardError);
+            _output.WriteLine(standardOutput);
             Assert.Contains("Option '--message' is required.", standardError, StringComparison.CurrentCulture);
         }
         [Fact]
         public void commandWrongOptionTest()
         {
-#pragma warning disable S125 // Sections of code should not be commented out
-            /* Unmerged change from project 'SampleConsoleApp.Tests (net6.0)'
-            Before:
-                       string ToolCommandPath = GetCommandPath();
-                       RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
-            After:
-                       string ToolCommandPath = GetCommandPath();
-                        CommandLineTest.RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
-            */
-#pragma warning restore S125 // Sections of code should not be commented out
             string ToolCommandPath = GetCommandPath();
             RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
-            Assert.Contains("Unrecognized command or argument '--missing'.", standardError, StringComparison.CurrentCulture);
+            _output.WriteLine(standardOutput);
+            Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
         }
 
         internal static string GetCommandPath()
