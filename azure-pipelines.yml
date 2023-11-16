@@ -38,6 +38,11 @@ stages:
         packageType: sdk
         useGlobalJson: true
 
+    - task: UseDotNet@2
+      inputs:
+        version: 7.0.403
+      displayName: Install .NET Core SDK 7.0.403
+
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
@@ -101,6 +106,16 @@ stages:
           clean: true
         steps:
         - task: NuGetAuthenticate@1
+        - task: UseDotNet@2
+          displayName: 'Use .NET Core sdk'
+          inputs:
+              packageType: sdk
+              useGlobalJson: true
+        - task: UseDotNet@2
+          displayName: Install .NET Core SDK 7.0.403
+          inputs:
+              version: 7.0.403
+
         - script: eng\commonlight\cibuild.cmd
             -configuration $(_BuildConfig)
             -prepareMachine
@@ -175,7 +190,11 @@ stages:
       inputs:
         packageType: 'sdk'
         useGlobalJson: true
-
+    - task: UseDotNet@2
+      inputs:
+        version: 7.0.403
+      displayName: Install .NET Core SDK 7.0.403
+      
     - task: NuGetAuthenticate@1
       displayName: "Authenticate on nuget feeds"
 

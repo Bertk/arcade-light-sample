@@ -19,31 +19,25 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
             Debug.WriteLine($"BaseTest.RunCommand: {command} {arguments}\nWorkingDirectory: {workingDirectory}");
-            using Process commandProcess = new();
-            commandProcess.StartInfo.FileName = command;
-            commandProcess.StartInfo.Arguments = arguments;
-            commandProcess.StartInfo.WorkingDirectory = workingDirectory;
-            commandProcess.StartInfo.RedirectStandardError = true;
-            commandProcess.StartInfo.RedirectStandardOutput = true;
-            string eOut = "";
-            commandProcess.ErrorDataReceived += new DataReceivedEventHandler((sender, e) => { eOut += e.Data; });
-            commandProcess.Start();
-            // To avoid deadlocks, use an asynchronous read operation on at least one of the streams.
-            commandProcess.BeginErrorReadLine();
+            ProcessStartInfo process = new ProcessStartInfo(command, arguments);
+            process.WorkingDirectory = workingDirectory;
+            process.RedirectStandardError = true;
+            process.RedirectStandardOutput = true;
+            Process commandProcess = Process.Start(process)!;
             if (!commandProcess.WaitForExit((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
             {
                 throw new XunitException($"Command '{command} {arguments}' didn't end after 5 minute");
             }
             standardOutput = commandProcess.StandardOutput.ReadToEnd();
-            standardError = eOut;
+            standardError = commandProcess.StandardError.ReadToEnd();
             return commandProcess.ExitCode == 0;
         }
 
-        [Fact(Skip = "fails with net8.0")]
+        [Fact]
         public void commandHelpTest()
         {
             string ToolCommandPath = GetCommandPath();
-            Assert.True(File.Exists(ToolCommandPath));
+            Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
             CommandLineTest.RunCommand(ToolCommandPath, $"-h", out string standardOutput, out string standardError);
             if (!string.IsNullOrEmpty(standardError))
             {
@@ -52,22 +46,28 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             Assert.Contains("CommandLine example", standardOutput, StringComparison.CurrentCulture);
         }
 
-        [Fact(Skip = "fails with net8.0")]
+        [Fact]
         public void commandMessageRequiredTest()
         {
             string ToolCommandPath = GetCommandPath();
-            Assert.True(File.Exists(ToolCommandPath));
+            Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
             CommandLineTest.RunCommand(ToolCommandPath, $"", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
+            _output.WriteLine("******************************************************************************************");
+            _output.WriteLine(standardError);
+            _output.WriteLine("******************************************************************************************");
             Assert.Contains("Option '--message' is required.", standardError, StringComparison.CurrentCulture);
         }
-        [Fact(Skip = "fails with net8.0")]
+        [Fact]
         public void commandWrongOptionTest()
         {
             string ToolCommandPath = GetCommandPath();
-            Assert.True(File.Exists(ToolCommandPath));
+            Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
             RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
+            _output.WriteLine("******************************************************************************************");
+            _output.WriteLine(standardError);
+            _output.WriteLine("******************************************************************************************");
             Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
         }
 
@@ -81,7 +81,13 @@ namespace SampleConsoleAppTest.CommandLine.Tests
 #if NET7_0
             string targetFramework = "net7.0";
 #endif
-            string ToolCommandPath = string.Concat(rootDirectory, $"\\bin\\SampleConsoleApp\\Debug\\{targetFramework}\\SampleConsoleApp.exe");
+#if DEBUG
+            string buildConfiguration = "Debug";
+#endif
+#if RELEASE
+            string buildConfiguration = "Release";
+#endif
+            string ToolCommandPath = Path.Combine(rootDirectory, "bin", "SampleConsoleApp", buildConfiguration, targetFramework, "SampleConsoleApp.exe");
             return ToolCommandPath;
         }
     }
