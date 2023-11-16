@@ -1,12 +1,21 @@
 # generate Software Bill of Materials
 
 parameters:
-  projects: ''
-  workingDir: ''
-  targetFolder: 'SBOM'
-  outputPath: ''
-  publishSBOM: false
-
+- name: projects
+  type: string
+  default: ''
+- name: workingDir
+  type: string
+  default: ''
+- name: targetFolder
+  type: string
+  default: 'SBOM'
+- name: outputPath
+  type: string
+  default: ''
+- name: publishSBOM
+  type: string
+  default: false
 
 # tool source code repositories:
 # - https://github.com/CycloneDX/cyclonedx-dotnet (.Net Core)

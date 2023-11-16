@@ -4,11 +4,21 @@
 # Limitation:   dotnet SDK does not provide .NET framework MSBuild targets like "Microsoft.WebApplication.targets". This c# projects will be ignored and "An error occurred for <file name of C# project>" message is added in build log.
 
 parameters:
-  condition: 'succeeded()'
-  enableQualitySteps: true
-  sourcePath: ''
-  nugetConfig: ''
-  breakBuild: false
+- name: condition
+  type: string
+  default: 'succeeded()'
+- name: enableQualitySteps
+  type: boolean
+  default: true
+- name: sourcePath
+  type: string
+  default: ''
+- name: nugetConfig
+  type: string
+  default: ''
+- name: breakBuild
+  type: boolean
+  default: false
 
 steps:
 - task: NuGetAuthenticate@0
