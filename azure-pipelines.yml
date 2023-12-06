@@ -7,6 +7,12 @@ variables:
 - template: eng/common-variables.yml
 - name: DOTNET_CLI_TELEMETRY_OPTOUT
   value: 1
+- name: POWERSHELL_TELEMETRY_OPTOUT
+  value: 1
+- name:  DOTNET_SKIP_FIRST_TIME_EXPERIENCE
+  value: 1
+- name: DOTNET_NOLOGO
+  value: true
 - name: Configuration
   value: 'Debug'
 - name: SolutionPath
@@ -194,7 +200,7 @@ stages:
       inputs:
         version: 7.0.403
       displayName: Install .NET Core SDK 7.0.403
-      
+
     - task: NuGetAuthenticate@1
       displayName: "Authenticate on nuget feeds"
 
