@@ -27,7 +27,7 @@ trigger:
       - main
   paths:
     exclude:
-    - /*.md
+    - '**/*.md'
 
 stages:
 - stage: build_Azure_DevOps
