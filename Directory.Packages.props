@@ -7,7 +7,7 @@
     <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" />
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="6.0.1-preview.38.g37f6b8c52b" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.1-preview.40.g50fbaa7bb9" />
     <PackageVersion Include="Google.Protobuf" Version="3.25.2" />
     <PackageVersion Include="Grpc.AspNetCore" Version="2.60.0" />
     <PackageVersion Include="Grpc.Net.Client" Version="2.60.0" />
