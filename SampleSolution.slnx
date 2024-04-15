@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/_Solution Folder/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="azure-pipelines.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="nuget.config" />
+    <File Path="README.md" />
+    <File Path="version.json" />
+  </Folder>
+  <Folder Name="/RazorPages/">
+    <Project Path="src\RazorPages\RazorPagesIntro\RazorPagesIntro.csproj" />
+    <Project Path="src\RazorPages\RazorPagesTestSample.Tests\RazorPagesTestSample.Tests.csproj" />
+    <Project Path="src\RazorPages\RazorPagesTestSample\RazorPagesTestSample.csproj" />
+  </Folder>
+  <Folder Name="/NewTypes/">
+    <Project Path="src\NewTypes\NewTypesTests\NewTypes.Tests.csproj" />
+    <Project Path="src\NewTypes\NewTypes\NewTypes.csproj" />
+  </Folder>
+  <Folder Name="/ConsoleApp/">
+    <Project Path="src\ConsoleApp\SampleConsoleAppTest\SampleConsoleApp.Tests.csproj" />
+    <Project Path="src\ConsoleApp\SampleConsoleApp\SampleConsoleApp.csproj" />
+  </Folder>
+  <Folder Name="/Calculator/">
+    <Project Path="src\Calculator\Calculator.Client\Calculator.Client.csproj" />
+    <Project Path="src\Calculator\Calculator.ServiceHost\Calculator.ServiceHost.csproj" />
+    <Project Path="src\Calculator\Calculator.ServiceLib\Calculator.ServiceLib.csproj" />
+    <Project Path="src\Calculator\Calculator.SharedLib\Calculator.SharedLib.csproj" />
+  </Folder>
+</Solution>
