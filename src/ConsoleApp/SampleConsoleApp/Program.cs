@@ -1,6 +1,12 @@
 using System.CommandLine;
-using System.CommandLine.Builder;
+using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.CommandLine.NamingConventionBinder;
+using System.Collections.Generic;
+using System.CommandLine.Help;
+using System.IO;
+using System.Linq;
+using static System.Environment;
 
 namespace SampleConsoleApp
 {
@@ -8,26 +14,21 @@ namespace SampleConsoleApp
     {
         static async Task Main(string[] args)
         {
-            Option<int> delayOption = new Option<int>("--delay");
-            delayOption.SetDefaultValue(42);
+            CliOption<int> delayOption = new("--delay",  "delay in seconds");
+            //delayOption.SetDefaultValue(42);
 
-            Option<string> messageOption = new Option<string>("--message") { IsRequired = true };
+            CliOption<string> messageOption = new("--message") { Required = true } ;
 
-            RootCommand rootCommand = new RootCommand("CommandLine example");
-            rootCommand.Add(delayOption);
-            rootCommand.Add(messageOption);
-
-            rootCommand.SetHandler((delayOptionValue, messageOptionValue) =>
+            CliRootCommand rootCommand = new ("CommandLine example")
             {
-                DoRootCommand(delayOptionValue, messageOptionValue);
-            },
-                delayOption, messageOption);
+                delayOption,
+                messageOption
+            };
 
-            CommandLineBuilder commandLineBuilder = new CommandLineBuilder(rootCommand);
 
-            commandLineBuilder.UseDefaults();
-            Parser parser = commandLineBuilder.Build();
-            await parser.InvokeAsync(args).ConfigureAwait(false);
+            CliConfiguration config = new CliConfiguration(rootCommand);
+            var result = config.Parse(args);
+
         }
 
         public static void DoRootCommand(int delay, string message)
