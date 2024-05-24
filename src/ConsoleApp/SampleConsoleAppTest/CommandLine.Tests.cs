@@ -71,8 +71,8 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             _output.WriteLine("******************************************************************************************");
             _output.WriteLine(standardError);
             _output.WriteLine("******************************************************************************************");
-            //Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
-            Assert.Contains("Befehl oder Argument '--missing' nicht erkannt", standardError, StringComparison.CurrentCulture);
+            Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
+            //Assert.Contains("Befehl oder Argument '--missing' nicht erkannt", standardError, StringComparison.CurrentCulture);
 
         }
 
