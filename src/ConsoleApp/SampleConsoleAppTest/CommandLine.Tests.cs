@@ -61,9 +61,6 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         [Fact, UseCulture("en-US")]
         public void commandWrongOptionTest()
         {
-            CultureInfo.CurrentCulture = new CultureInfo("en-US"); 
-            CultureInfo.CurrentUICulture = new CultureInfo("en-US");
-
             string ToolCommandPath = GetCommandPath();
             Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
             RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
