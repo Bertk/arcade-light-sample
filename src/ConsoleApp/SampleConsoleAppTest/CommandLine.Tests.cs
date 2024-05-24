@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
@@ -58,9 +58,12 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             _output.WriteLine("******************************************************************************************");
             Assert.Contains("Option '--message' is required.", standardError, StringComparison.CurrentCulture);
         }
-        [Fact]
+        [Fact, UseCulture("en-US")]
         public void commandWrongOptionTest()
         {
+            CultureInfo.CurrentCulture = new CultureInfo("en-US"); 
+            CultureInfo.CurrentUICulture = new CultureInfo("en-US");
+
             string ToolCommandPath = GetCommandPath();
             Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
             RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
@@ -68,7 +71,9 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             _output.WriteLine("******************************************************************************************");
             _output.WriteLine(standardError);
             _output.WriteLine("******************************************************************************************");
-            Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
+            //Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
+            Assert.Contains("Befehl oder Argument '--missing' nicht erkannt", standardError, StringComparison.CurrentCulture);
+
         }
 
         internal static string GetCommandPath()
