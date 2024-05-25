@@ -1,6 +1,6 @@
 using System.CommandLine;
-using System.CommandLine.Builder;
 using System.CommandLine.Parsing;
+using System.CommandLine.Help;
 
 namespace SampleConsoleApp
 {
@@ -8,26 +8,28 @@ namespace SampleConsoleApp
     {
         static async Task Main(string[] args)
         {
-            Option<int> delayOption = new Option<int>("--delay");
-            delayOption.SetDefaultValue(42);
+            CliOption<int> delayOption = new("--delay") { Description = "delay in seconds", DefaultValueFactory = (_) => 42 };
+            CliOption<string> messageOption = new("--message") { Required = true };
 
-            Option<string> messageOption = new Option<string>("--message") { IsRequired = true };
-
-            RootCommand rootCommand = new RootCommand("CommandLine example");
+            CliRootCommand rootCommand = new("CommandLine example");
             rootCommand.Add(delayOption);
             rootCommand.Add(messageOption);
+            rootCommand.Add(new HelpOption());
+            rootCommand.Add(new VersionOption() { Description = "SampleConsoleApp version" });
 
-            rootCommand.SetHandler((delayOptionValue, messageOptionValue) =>
+            var parseResult = CliParser.Parse(rootCommand, args);
+
+            CliConfiguration config = new CliConfiguration(rootCommand);
+
+            rootCommand.SetAction(_ =>
             {
+                int delayOptionValue = parseResult.GetValue(delayOption);
+                string messageOptionValue = parseResult.GetValue(messageOption) ?? "unknown";
                 DoRootCommand(delayOptionValue, messageOptionValue);
-            },
-                delayOption, messageOption);
+            });
 
-            CommandLineBuilder commandLineBuilder = new CommandLineBuilder(rootCommand);
+            await config.InvokeAsync(args).ConfigureAwait(false);
 
-            commandLineBuilder.UseDefaults();
-            Parser parser = commandLineBuilder.Build();
-            await parser.InvokeAsync(args).ConfigureAwait(false);
         }
 
         public static void DoRootCommand(int delay, string message)

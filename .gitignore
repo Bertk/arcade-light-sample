@@ -369,4 +369,4 @@ babel-webpack/
 .dotnet/
 *bom.xml
 
-/src/NewTypes/NewTypes/Properties/launchSettings.json
+launchSettings.json
