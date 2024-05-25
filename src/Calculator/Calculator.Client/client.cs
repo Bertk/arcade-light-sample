@@ -12,6 +12,7 @@ namespace CalculatorClient
     {
         static async Task Main(string[] args)
         {
+#pragma warning disable S6966
             // Using Microsoft's Grpc
             using GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:5001");
             CalculatorService.CalculatorServiceClient client = new CalculatorService.CalculatorServiceClient(channel);
@@ -35,6 +36,7 @@ namespace CalculatorClient
 
             CalculatorReply divisionError = client.Divide(new CalculatorRequest { N1 = n1, N2 = 0 });
             Console.WriteLine($"Called service with error: {n1} / {0} = {divisionError.Result}");
+#pragma warning restore S6966
         }
     }
 }

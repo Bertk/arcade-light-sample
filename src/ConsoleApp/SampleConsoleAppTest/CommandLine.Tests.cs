@@ -12,9 +12,11 @@ namespace SampleConsoleAppTest.CommandLine.Tests
     public class CommandLineTest
     {
         private readonly ITestOutputHelper _output;
+        private readonly string _language;
         public CommandLineTest(ITestOutputHelper output)
         {
             _output = output;
+            _language = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName; 
         }
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
@@ -58,7 +60,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             _output.WriteLine("******************************************************************************************");
             Assert.Contains("Option '--message' is required.", standardError, StringComparison.CurrentCulture);
         }
-        [Fact, UseCulture("en-US")]
+        [Fact]
         public void commandWrongOptionTest()
         {
             string ToolCommandPath = GetCommandPath();
@@ -68,8 +70,11 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             _output.WriteLine("******************************************************************************************");
             _output.WriteLine(standardError);
             _output.WriteLine("******************************************************************************************");
-            Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.CurrentCulture);
-            //Assert.Contains("Befehl oder Argument '--missing' nicht erkannt", standardError, StringComparison.CurrentCulture);
+            switch (_language)
+            {
+                case "de": Assert.Contains("Befehl oder Argument '--missing' nicht erkannt", standardError, StringComparison.InvariantCulture); break;
+                default: Assert.Contains("Unrecognized command or argument '--missing'", standardError, StringComparison.InvariantCulture); break;
+            }
 
         }
 
