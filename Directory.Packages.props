@@ -3,7 +3,7 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="9.25.1.91650" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="9.26.0.92422" />
     <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" />
     <GlobalPackageReference Include="System.CommandLine.Generator" Version="2.0.0-beta4.23307.1" />
   </ItemGroup>
