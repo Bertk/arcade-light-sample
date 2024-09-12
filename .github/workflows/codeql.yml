@@ -43,7 +43,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
 
@@ -65,7 +65,7 @@ jobs:
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
 
     - name: Setup dotnet 9.0
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.1xx'
         source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
