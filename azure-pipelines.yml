@@ -93,6 +93,7 @@ stages:
           publish:
             artifacts: true
             logs: true
+            condition: and(succeeded(), eq(variables['$(_BuildConfig)'], 'Debug'))
         workspace:
           clean: all
         jobs:
