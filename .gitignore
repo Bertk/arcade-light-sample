@@ -359,6 +359,7 @@ OpenCover/
 *.binlog
 dist/
 testResults/
+TestResults/
 # security-scan results report format
 *.sarif
 
@@ -370,3 +371,4 @@ babel-webpack/
 *bom.xml
 
 launchSettings.json
+
