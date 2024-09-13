@@ -16,7 +16,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         public CommandLineTest(ITestOutputHelper output)
         {
             _output = output;
-            _language = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName; 
+            _language = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
         }
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
@@ -81,12 +81,15 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         internal static string GetCommandPath()
         {
             string currentPath = Assembly.GetExecutingAssembly().Location;
-            string rootDirectory = currentPath.Substring(0, currentPath.IndexOf("\\bin\\", StringComparison.CurrentCulture));
+            string rootDirectory = currentPath.Substring(0, currentPath.IndexOf($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.CurrentCulture));
+#if NET6_0
+            string targetFramework = "net6.0";
+#endif
 #if NET8_0
             string targetFramework = "net8.0";
 #endif
-#if NET7_0
-            string targetFramework = "net7.0";
+#if NET9_0
+            string targetFramework = "net9.0";
 #endif
 #if DEBUG
             string buildConfiguration = "Debug";
@@ -94,7 +97,15 @@ namespace SampleConsoleAppTest.CommandLine.Tests
 #if RELEASE
             string buildConfiguration = "Release";
 #endif
-            string ToolCommandPath = Path.Combine(rootDirectory, "bin", "SampleConsoleApp", buildConfiguration, targetFramework, "SampleConsoleApp.exe");
+
+            string extension = "";
+            if (OperatingSystem.IsWindows())
+            {
+                extension = ".exe";
+            }
+
+            string ToolCommandPath = Path.Combine(rootDirectory, "bin", "SampleConsoleApp", buildConfiguration, targetFramework, $"SampleConsoleApp{extension}");
+
             return ToolCommandPath;
         }
     }
