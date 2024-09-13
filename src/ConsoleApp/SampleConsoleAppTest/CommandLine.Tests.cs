@@ -78,10 +78,9 @@ namespace SampleConsoleAppTest.CommandLine.Tests
 
         }
 
-        internal string GetCommandPath()
+        internal static string GetCommandPath()
         {
             string currentPath = Assembly.GetExecutingAssembly().Location;
-            _output.WriteLine(currentPath);
             string rootDirectory = currentPath.Substring(0, currentPath.IndexOf($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.CurrentCulture));
 #if NET6_0
             string targetFramework = "net6.0";
