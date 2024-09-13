@@ -110,7 +110,3 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         }
     }
 }
-
-
-
-
