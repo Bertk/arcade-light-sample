@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <NoWarn>$(NoWarn);NU1504;NU1507;CS1591;CA2007</NoWarn>
         <EnableSourceLink>false</EnableSourceLink>
         <!--coverlet workaround -->
