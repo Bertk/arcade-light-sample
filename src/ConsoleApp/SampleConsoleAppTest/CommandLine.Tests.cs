@@ -1,13 +1,11 @@
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Xunit;
-using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace SampleConsoleAppTest.CommandLine.Tests
+namespace SampleConsoleApp.Tests
 {
     public class CommandLineTest
     {
@@ -21,10 +19,12 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         private protected static bool RunCommand(string command, string arguments, out string standardOutput, out string standardError, string workingDirectory = "")
         {
             Debug.WriteLine($"BaseTest.RunCommand: {command} {arguments}\nWorkingDirectory: {workingDirectory}");
-            ProcessStartInfo process = new ProcessStartInfo(command, arguments);
-            process.WorkingDirectory = workingDirectory;
-            process.RedirectStandardError = true;
-            process.RedirectStandardOutput = true;
+            ProcessStartInfo process = new(command, arguments)
+            {
+                WorkingDirectory = workingDirectory,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true
+            };
             Process commandProcess = Process.Start(process)!;
             if (!commandProcess.WaitForExit((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
             {
@@ -40,7 +40,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         {
             string ToolCommandPath = GetCommandPath();
             Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
-            CommandLineTest.RunCommand(ToolCommandPath, $"-h", out string standardOutput, out string standardError);
+            _ = RunCommand(ToolCommandPath, $"-h", out string standardOutput, out string standardError);
             if (!string.IsNullOrEmpty(standardError))
             {
                 _output.WriteLine(standardError);
@@ -53,7 +53,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         {
             string ToolCommandPath = GetCommandPath();
             Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
-            CommandLineTest.RunCommand(ToolCommandPath, $"", out string standardOutput, out string standardError);
+            _ = RunCommand(ToolCommandPath, $"", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
             _output.WriteLine("******************************************************************************************");
             _output.WriteLine(standardError);
@@ -65,7 +65,7 @@ namespace SampleConsoleAppTest.CommandLine.Tests
         {
             string ToolCommandPath = GetCommandPath();
             Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
-            RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
+            _ = RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
             _output.WriteLine("******************************************************************************************");
             _output.WriteLine(standardError);
@@ -83,19 +83,19 @@ namespace SampleConsoleAppTest.CommandLine.Tests
             string currentPath = Assembly.GetExecutingAssembly().Location;
             string rootDirectory = currentPath.Substring(0, currentPath.IndexOf($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.CurrentCulture));
 #if NET6_0
-            string targetFramework = "net6.0";
+            const string targetFramework = "net6.0";
 #endif
 #if NET8_0
-            string targetFramework = "net8.0";
+            const string targetFramework = "net8.0";
 #endif
 #if NET9_0
-            string targetFramework = "net9.0";
+            const string targetFramework = "net9.0";
 #endif
 #if DEBUG
-            string buildConfiguration = "Debug";
+            const string buildConfiguration = "Debug";
 #endif
 #if RELEASE
-            string buildConfiguration = "Release";
+            const string buildConfiguration = "Release";
 #endif
 
             string extension = "";
@@ -104,7 +104,8 @@ namespace SampleConsoleAppTest.CommandLine.Tests
                 extension = ".exe";
             }
 
-            string ToolCommandPath = Path.Combine(rootDirectory, "bin", "SampleConsoleApp", buildConfiguration, targetFramework, $"SampleConsoleApp{extension}");
+            //string ToolCommandPath = Path.Combine(rootDirectory, "bin", "SampleConsoleApp", buildConfiguration, targetFramework, $"SampleConsoleApp{extension}");
+            string ToolCommandPath = Path.Combine(rootDirectory, "bin", buildConfiguration, targetFramework, $"SampleConsoleApp{extension}");
 
             return ToolCommandPath;
         }
