@@ -61,7 +61,6 @@ stages:
         command: build
         configuration: '$(Configuration)'
         projects: '$(SolutionPath)'
-        arguments: '--no-restore'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet unit test'
