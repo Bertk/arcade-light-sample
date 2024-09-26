@@ -44,6 +44,8 @@ stages:
         packageType: sdk
         useGlobalJson: true
 
+    - task: NuGetAuthenticate@1
+
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
