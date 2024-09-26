@@ -104,8 +104,7 @@ namespace SampleConsoleApp.Tests
                 extension = ".exe";
             }
 
-            //string ToolCommandPath = Path.Combine(rootDirectory, "bin", "SampleConsoleApp", buildConfiguration, targetFramework, $"SampleConsoleApp{extension}");
-            string ToolCommandPath = Path.Combine(rootDirectory, "bin", buildConfiguration, targetFramework, $"SampleConsoleApp{extension}");
+            string ToolCommandPath = Path.Combine(rootDirectory, "bin", "SampleConsoleApp", buildConfiguration, targetFramework, $"SampleConsoleApp{extension}");
 
             return ToolCommandPath;
         }
