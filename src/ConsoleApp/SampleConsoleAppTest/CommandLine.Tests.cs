@@ -44,6 +44,12 @@ namespace SampleConsoleApp.Tests
             if (!string.IsNullOrEmpty(standardError))
             {
                 _output.WriteLine(standardError);
+                TestContext.Current.AddAttachment("error", standardError);
+            }
+            else
+            {
+                _output.WriteLine(standardOutput);
+                TestContext.Current.AddAttachment("output", standardOutput);
             }
             Assert.Contains("CommandLine example", standardOutput, StringComparison.CurrentCulture);
         }
@@ -55,8 +61,10 @@ namespace SampleConsoleApp.Tests
             Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
             _ = RunCommand(ToolCommandPath, $"", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
+            TestContext.Current.AddAttachment("output", standardOutput);
             _output.WriteLine("******************************************************************************************");
             _output.WriteLine(standardError);
+            TestContext.Current.AddAttachment("error", standardError);
             _output.WriteLine("******************************************************************************************");
             Assert.Contains("Option '--message' is required.", standardError, StringComparison.CurrentCulture);
         }
@@ -67,8 +75,10 @@ namespace SampleConsoleApp.Tests
             Assert.True(File.Exists(ToolCommandPath), $"File '{ToolCommandPath}' does not exist .");
             _ = RunCommand(ToolCommandPath, $"--missing", out string standardOutput, out string standardError);
             _output.WriteLine(standardOutput);
+            TestContext.Current.AddAttachment("output", standardOutput);
             _output.WriteLine("******************************************************************************************");
             _output.WriteLine(standardError);
+            TestContext.Current.AddAttachment("error", standardError);
             _output.WriteLine("******************************************************************************************");
             switch (_language)
             {

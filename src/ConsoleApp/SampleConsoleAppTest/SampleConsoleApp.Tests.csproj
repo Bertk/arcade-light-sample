@@ -10,6 +10,7 @@
     <EnableSourceLink>false</EnableSourceLink>
     <!--coverlet workaround -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

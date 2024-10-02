@@ -8,6 +8,7 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <VSTestRunSettingsFile>$(MSBuildThisFileDirectory)coverlet.runsettings</VSTestRunSettingsFile>
         <RunSettingsFilePath>$(MSBuildThisFileDirectory)coverlet.runsettings</RunSettingsFilePath>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <!-- https://github.com/NuGet/Home/issues/4412 -->
