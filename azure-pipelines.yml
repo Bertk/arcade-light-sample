@@ -44,6 +44,8 @@ stages:
         packageType: sdk
         useGlobalJson: true
 
+    - task: NuGetAuthenticate@1
+
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
@@ -59,7 +61,6 @@ stages:
         command: build
         configuration: '$(Configuration)'
         projects: '$(SolutionPath)'
-        arguments: '--no-restore'
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet unit test'
