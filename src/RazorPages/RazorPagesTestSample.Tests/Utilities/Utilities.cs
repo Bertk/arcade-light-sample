@@ -1,15 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RazorPagesTestSample.Data;
 
-namespace RazorPagesTestSample.Tests
+namespace RazorPagesTestSample.Tests.Utilities
 {
-    public static class TestUtilities
+    internal static class TestUtilities
     {
         #region snippet1
         public static DbContextOptions<AppDbContext> TestDbContextOptions()
