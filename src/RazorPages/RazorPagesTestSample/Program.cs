@@ -23,7 +23,7 @@ namespace RazorPagesTestSample
                 IServiceProvider services = scope.ServiceProvider;
                 AppDbContext db = services.GetRequiredService<AppDbContext>();
 
-                db.Database.EnsureCreated();
+                _ = db.Database.EnsureCreated();
 
                 if (!db.Messages.Any())
                 {
@@ -50,7 +50,7 @@ namespace RazorPagesTestSample
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    _ = webBuilder.UseStartup<Startup>();
                 });
     }
 }

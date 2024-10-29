@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RazorPagesTestSample.Data;
+using RazorPagesTestSample.Tests.Utilities;
 using Xunit;
 
 namespace RazorPagesTestSample.Tests.UnitTests

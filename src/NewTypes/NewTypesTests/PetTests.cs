@@ -1,8 +1,7 @@
-using System;
-using Pets;
+using NewTypes.Pets;
 using Xunit;
 
-namespace PetsUnitTest
+namespace NewTypes.Tests
 {
 
     public class PetTests

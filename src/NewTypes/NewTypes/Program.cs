@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
+using NewTypes.Pets;
 
-namespace Pets
+namespace NewTypes
 {
     public static class Program
     {
         public static void Main(string[] args)
         {
-            List<IPet> pets = new List<IPet>
-            {
+            ArgumentNullException.ThrowIfNull(args);
+
+            List<IPet> pets =
+            [
                 new Dog(),
                 new Cat()
-            };
+            ];
 
             foreach (IPet pet in pets)
             {
