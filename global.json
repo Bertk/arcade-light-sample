@@ -7,6 +7,6 @@
     "dotnet": "9.0.100-rc.1.24452.12"
   },
   "msbuild-sdks": {
-    "DotNetDev.ArcadeLight.Sdk": "1.7.4"
+    "DotNetDev.ArcadeLight.Sdk": "1.7.5"
   }
 }
