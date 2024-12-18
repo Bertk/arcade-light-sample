@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <NoWarn>$(NoWarn);CA1515;IDE0079</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

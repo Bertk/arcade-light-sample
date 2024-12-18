@@ -76,7 +76,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build
 
      #- run: |
      #    echo "Run, Build Application using script"
