@@ -11,14 +11,14 @@ Arcade-light is inspired from [dotnet/arcade](https://github.com/dotnet/arcade) 
 ```json
 {
   "sdk": {
-    "version": "8.0.403",
+    "version": "8.0.404",
     "rollForward": "latestFeature"
   },
   "tools": {
-    "dotnet": "8.0.403"
+    "dotnet": "8.0.404"
   },
   "msbuild-sdks": {
-    "DotNetDev.ArcadeLight.Sdk": "1.7.5"
+    "DotNetDev.ArcadeLight.Sdk": "1.8.0"
   }
 }
 ```
@@ -56,7 +56,7 @@ Arcade-light is inspired from [dotnet/arcade](https://github.com/dotnet/arcade) 
   </PropertyGroup>
 
   <ItemGroup>
-    <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.6.146" />
+    <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.7.112" />
   </ItemGroup>
   ...
 <\Project>
