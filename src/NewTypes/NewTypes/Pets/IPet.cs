@@ -1,6 +1,4 @@
-using System;
-
-namespace Pets
+namespace NewTypes.Pets
 {
     public interface IPet
     {
