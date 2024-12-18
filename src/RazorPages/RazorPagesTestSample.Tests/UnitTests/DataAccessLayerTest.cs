@@ -16,8 +16,8 @@ namespace RazorPagesTestSample.Tests.UnitTests
             using AppDbContext db = new(TestUtilities.TestDbContextOptions());
             // Arrange
             List<Message> expectedMessages = AppDbContext.GetSeedingMessages();
-            await db.AddRangeAsync(expectedMessages);
-            await db.SaveChangesAsync();
+            await db.AddRangeAsync(expectedMessages, TestContext.Current.CancellationToken);
+            _ = await db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
             // Act
             List<Message> result = await db.GetMessagesAsync();
@@ -41,7 +41,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
             await db.AddMessageAsync(expectedMessage);
 
             // Assert
-            Message actualMessage = await db.FindAsync<Message>(recId);
+            Message actualMessage = await db.FindAsync<Message>(recId, TestContext.Current.CancellationToken);
             Assert.Equal(expectedMessage, actualMessage);
         }
 
@@ -51,14 +51,14 @@ namespace RazorPagesTestSample.Tests.UnitTests
             using AppDbContext db = new(TestUtilities.TestDbContextOptions());
             // Arrange
             List<Message> seedMessages = AppDbContext.GetSeedingMessages();
-            await db.AddRangeAsync(seedMessages);
-            await db.SaveChangesAsync();
+            await db.AddRangeAsync(seedMessages, TestContext.Current.CancellationToken);
+            _ = await db.SaveChangesAsync(TestContext.Current.CancellationToken);
 
             // Act
             await db.DeleteAllMessagesAsync();
 
             // Assert
-            Assert.Empty(await db.Messages.AsNoTracking().ToListAsync());
+            Assert.Empty(await db.Messages.AsNoTracking().ToListAsync(cancellationToken: TestContext.Current.CancellationToken));
         }
 
         [Fact]
@@ -68,8 +68,8 @@ namespace RazorPagesTestSample.Tests.UnitTests
             #region snippet1
             // Arrange
             List<Message> seedMessages = AppDbContext.GetSeedingMessages();
-            await db.AddRangeAsync(seedMessages);
-            await db.SaveChangesAsync();
+            await db.AddRangeAsync(seedMessages, TestContext.Current.CancellationToken);
+            _ = await db.SaveChangesAsync(TestContext.Current.CancellationToken);
             int recId = 1;
             List<Message> expectedMessages =
                 seedMessages.Where(message => message.Id != recId).ToList();
@@ -82,7 +82,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
 
             #region snippet3
             // Assert
-            List<Message> actualMessages = await db.Messages.AsNoTracking().ToListAsync();
+            List<Message> actualMessages = await db.Messages.AsNoTracking().ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Equal(
                 expectedMessages.OrderBy(m => m.Id).Select(m => m.Text),
                 actualMessages.OrderBy(m => m.Id).Select(m => m.Text));
@@ -96,8 +96,8 @@ namespace RazorPagesTestSample.Tests.UnitTests
             using AppDbContext db = new(TestUtilities.TestDbContextOptions());
             // Arrange
             List<Message> expectedMessages = AppDbContext.GetSeedingMessages();
-            await db.AddRangeAsync(expectedMessages);
-            await db.SaveChangesAsync();
+            await db.AddRangeAsync(expectedMessages, TestContext.Current.CancellationToken);
+            _ = await db.SaveChangesAsync(TestContext.Current.CancellationToken);
             int recId = 4;
 
             // Act
@@ -113,7 +113,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
 #pragma warning restore CA1031 // Do not catch general exception types
 
             // Assert
-            List<Message> actualMessages = await db.Messages.AsNoTracking().ToListAsync();
+            List<Message> actualMessages = await db.Messages.AsNoTracking().ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             Assert.Equal(
                 expectedMessages.OrderBy(m => m.Id).Select(m => m.Text),
                 actualMessages.OrderBy(m => m.Id).Select(m => m.Text));

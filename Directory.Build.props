@@ -20,7 +20,7 @@
     <TargetFrameworkForNETSDK>net6.0</TargetFrameworkForNETSDK>
 
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <NoWarn>$(NoWarn);NU1507</NoWarn>
+    <NoWarn>$(NoWarn);NU1507;CS1591</NoWarn>
 
     <XUnitCoreSettingsFile>$(MSBuildThisFileDirectory)eng/xunit.runner.json</XUnitCoreSettingsFile>
   </PropertyGroup>
@@ -61,6 +61,22 @@
     <!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+  </PropertyGroup>
+
+    <ItemGroup>
+    <VSTestLogger Include="trx%3BLogFileName=TestResults-$(TargetFramework)-$(MSBuildProjectName).trx" />
+    <VSTestLogger Include="html%3BLogFileName=TestResults-$(TargetFramework)-$(MSBuildProjectName).html" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <VSTestResultsDirectory>$(RepoRoot)artifacts/testresults/$(Configuration.ToLowerInvariant())</VSTestResultsDirectory>
+    <VSTestLogger>@(VSTestLogger)</VSTestLogger>
+  </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <VSTestResultsDirectory>$(RepoRoot)artifacts\testresults\$(Configuration.ToLowerInvariant())</VSTestResultsDirectory>
+    <VSTestLogger>@(VSTestLogger)</VSTestLogger>
   </PropertyGroup>
 
 </Project>
