@@ -23,7 +23,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
             List<Message> result = await db.GetMessagesAsync();
 
             // Assert
-            List<Message> actualMessages = Assert.IsAssignableFrom<List<Message>>(result);
+            List<Message> actualMessages = Assert.IsType<List<Message>>(result, exactMatch: false);
             Assert.Equal(
                 expectedMessages.OrderBy(m => m.Id).Select(m => m.Text),
                 actualMessages.OrderBy(m => m.Id).Select(m => m.Text));
@@ -41,7 +41,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
             await db.AddMessageAsync(expectedMessage);
 
             // Assert
-            Message actualMessage = await db.FindAsync<Message>(recId, TestContext.Current.CancellationToken);
+            Message actualMessage = await db.FindAsync<Message>(new object[] { recId, TestContext.Current.CancellationToken }, TestContext.Current.CancellationToken);
             Assert.Equal(expectedMessage, actualMessage);
         }
 
@@ -101,7 +101,6 @@ namespace RazorPagesTestSample.Tests.UnitTests
             int recId = 4;
 
             // Act
-#pragma warning disable CA1031 // Do not catch general exception types
             try
             {
                 await db.DeleteMessageAsync(recId);
@@ -110,7 +109,6 @@ namespace RazorPagesTestSample.Tests.UnitTests
             {
                 // recId doesn't exist
             }
-#pragma warning restore CA1031 // Do not catch general exception types
 
             // Assert
             List<Message> actualMessages = await db.Messages.AsNoTracking().ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
