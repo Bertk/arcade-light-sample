@@ -87,7 +87,7 @@ jobs:
         run: dotnet test --framework ${{ matrix.framework }} --verbosity normal --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
 
       - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.9
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.3
         with:
           reports: ./coverage/**/coverage.cobertura.xml
           assemblyfilters: -xunit*
