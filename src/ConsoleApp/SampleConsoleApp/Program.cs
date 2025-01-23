@@ -1,6 +1,6 @@
 using System.CommandLine;
-using System.CommandLine.Parsing;
 using System.CommandLine.Help;
+using System.CommandLine.Parsing;
 
 namespace SampleConsoleApp
 {
@@ -8,18 +8,18 @@ namespace SampleConsoleApp
     {
         static async Task Main(string[] args)
         {
-            CliOption<int> delayOption = new("--delay") { Description = "delay in seconds", DefaultValueFactory = (_) => 42 };
-            CliOption<string> messageOption = new("--message") { Required = true };
+            Option<int> delayOption = new("--delay") { Description = "delay in seconds", DefaultValueFactory = (_) => 42 };
+            Option<string> messageOption = new("--message") { Required = true };
 
-            CliRootCommand rootCommand = new("CommandLine example");
+            RootCommand rootCommand = new("CommandLine example");
             rootCommand.Add(delayOption);
             rootCommand.Add(messageOption);
             rootCommand.Add(new HelpOption());
             rootCommand.Add(new VersionOption() { Description = "SampleConsoleApp version" });
 
-            var parseResult = CliParser.Parse(rootCommand, args);
+            var parseResult = CommandLineParser.Parse(rootCommand, args);
 
-            CliConfiguration config = new CliConfiguration(rootCommand);
+            CommandLineConfiguration config = new CommandLineConfiguration(rootCommand);
 
             rootCommand.SetAction(_ =>
             {
