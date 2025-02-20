@@ -73,10 +73,10 @@ jobs:
         NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }}
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore SampleSolution.sln
 
     - name: Build
-      run: dotnet build
+      run: dotnet build SampleSolution.sln
 
      #- run: |
      #    echo "Run, Build Application using script"
