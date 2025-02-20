@@ -67,16 +67,16 @@ jobs:
     - name: Setup dotnet 9.0
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.100-rc.1.24452.12'
+        dotnet-version: '9.0.200'
         source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.AZURE_DEVOPS_TOKEN }}
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore SampleSolution.sln
 
     - name: Build
-      run: dotnet build
+      run: dotnet build SampleSolution.sln
 
      #- run: |
      #    echo "Run, Build Application using script"
