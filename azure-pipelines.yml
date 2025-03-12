@@ -87,7 +87,7 @@ stages:
       parameters:
         artifacts:
           publish:
-            artifacts: true
+            artifacts: false
             logs: true
         workspace:
           clean: all
