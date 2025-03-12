@@ -105,7 +105,7 @@ namespace RazorPagesTestSample.Tests.UnitTests
             {
                 await db.DeleteMessageAsync(recId);
             }
-            catch
+            catch (DbUpdateConcurrencyException)
             {
                 // recId doesn't exist
             }
